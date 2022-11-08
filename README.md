@@ -5,7 +5,9 @@ ______
 
 ## Установка ##
 _____
-
+```
+composer require lava-payment/lava
+```
 ## Использование ##
 ___
 
