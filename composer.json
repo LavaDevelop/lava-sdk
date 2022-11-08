@@ -1,5 +1,5 @@
 {
-  "name": "lava/lava-api",
+  "name": "lava-payment/lava",
   "type": "library",
   "description": "description",
   "minimum-stability": "stable",
