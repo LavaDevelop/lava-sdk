@@ -5,6 +5,7 @@
   "minimum-stability": "stable",
   "keywords": ["lava", "lava-sdk", "lava payment"],
   "license": "MIT",
+  "version": "1.0.0",
   "autoload": {
     "psr-4": {
       "Lava\\Api\\": "src/"
