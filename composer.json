@@ -1,9 +1,10 @@
 {
   "name": "lava-payment/lava",
   "type": "library",
-  "description": "description",
+  "description": "Lava payment sdk",
   "minimum-stability": "stable",
-  "license": "proprietary",
+  "keywords": ["lava", "lava-sdk", "lava payment"],
+  "license": "MIT",
   "autoload": {
     "psr-4": {
       "Lava\\Api\\": "src/"
