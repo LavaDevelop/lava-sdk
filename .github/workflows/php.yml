@@ -18,12 +18,11 @@ jobs:
        uses: actions/checkout@v2
 
      - name: Install composer and dependencies
-       uses: php-actions/composer@v6
+       run: composer install --prefer-dist --no-progress
 
      - name: PHPUnit Tests
        uses: php-actions/phpunit@v3
-       env:
-         XDEBUG_MODE: coverage
+      
        with:
          bootstrap: vendor/autoload.php
          configuration: phpunit.xml
