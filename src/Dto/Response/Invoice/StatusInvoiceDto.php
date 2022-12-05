@@ -19,8 +19,8 @@ class StatusInvoiceDto
     private ?string $successUrl;
     private ?string $hookUrl;
     private ?string $customFields;
-    private ?string $excludeService;
-    private ?string $includeService;
+    private ?array $excludeService;
+    private ?array $includeService;
 
     /**
      * @param string $status
@@ -34,10 +34,10 @@ class StatusInvoiceDto
      * @param string|null $successUrl
      * @param string|null $hookUrl
      * @param string|null $customFields
-     * @param string|null $includeService
-     * @param string|null $excludeService
+     * @param array|null $includeService
+     * @param array|null $excludeService
      */
-    public function __construct(string $status, ?string $errorMessage, string $invoiceId, string $shopId, float $amount, string $expire, string $orderId, ?string $failUrl, ?string $successUrl, ?string $hookUrl, ?string $customFields, ?string $includeService, ?string $excludeService)
+    public function __construct(string $status, ?string $errorMessage, string $invoiceId, string $shopId, float $amount, string $expire, string $orderId, ?string $failUrl, ?string $successUrl, ?string $hookUrl, ?string $customFields, ?array $includeService, ?array $excludeService)
     {
         $this->status = $status;
         $this->errorMessage = $errorMessage;
@@ -68,17 +68,17 @@ class StatusInvoiceDto
     }
 
     /**
-     * @return string|null
+     * @return array|null
      */
-    public function getExcludeService(): ?string
+    public function getExcludeService(): ?array
     {
         return $this->excludeService;
     }
 
     /**
-     * @return string|null
+     * @return array|null
      */
-    public function getIncludeService(): ?string
+    public function getIncludeService(): ?array
     {
         return $this->includeService;
     }
