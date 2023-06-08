@@ -138,7 +138,7 @@ class Client implements ClientContract
         $response = $this->httpClient->postRequest(PayoffUrlConstants::CREATE_PAYOFF, $request);
 
         if (!empty($response['error']) || $response['status'] !== 200) {
-            throw new PayoffException($response['error'], $response['status']);
+            throw new PayoffException(is_array($response['error']) ? json_encode($response['error'], JSON_THROW_ON_ERROR) : $response['error'], $response['status']);
         }
 
         return $response;
