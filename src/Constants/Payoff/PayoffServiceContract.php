@@ -15,7 +15,8 @@ class PayoffServiceContract
         'payeer_payoff',
         'mobile_payoff',
         'erc20_payoff',
-        'trc20_payoff'
+        'trc20_payoff',
+        'steam_payoff',
     ];
 
 }
