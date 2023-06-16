@@ -43,7 +43,7 @@ class Client implements ClientContract
         $response = $this->httpClient->postRequest(RefundUrlConstants::CREATE_REFUND, $request);
 
         if (!empty($response['error']) || $response['status'] !== 200) {
-            throw new RefundException($response['error'], $response['status']);
+            throw new RefundException(is_array($response['error']) ? json_encode($response['error'], JSON_THROW_ON_ERROR) : $response['error'], $response['status']);
         }
 
         return $response;
@@ -59,7 +59,7 @@ class Client implements ClientContract
         $request = json_encode($data, JSON_THROW_ON_ERROR);
         $response = $this->httpClient->postRequest(RefundUrlConstants::GET_STATUS_REFUND, $request);
         if (!empty($response['error']) || $response['status'] !== 200) {
-            throw new RefundException($response['error'], $response['status']);
+            throw new RefundException(is_array($response['error']) ? json_encode($response['error'], JSON_THROW_ON_ERROR) : $response['error'], $response['status']);
         }
 
         return $response;
@@ -77,7 +77,7 @@ class Client implements ClientContract
         $response = $this->httpClient->postRequest(ShopUrlConstants::GET_BALANCE, $request);
 
         if (!empty($response['error']) || $response['status'] !== 200) {
-            throw new ShopException($response['error'], $response['status']);
+            throw new ShopException(is_array($response['error']) ? json_encode($response['error'], JSON_THROW_ON_ERROR) : $response['error'], $response['status']);
         }
 
         return $response;
@@ -94,7 +94,7 @@ class Client implements ClientContract
         $request = json_encode($data, JSON_THROW_ON_ERROR);
         $response = $this->httpClient->postRequest(InvoiceUrlConstants::INVOICE_CREATE, $request);
         if (!empty($response['error']) || $response['status'] !== 200) {
-            throw new InvoiceException($response['error'], $response['status']);
+            throw new InvoiceException(is_array($response['error']) ? json_encode($response['error'], JSON_THROW_ON_ERROR) : $response['error'], $response['status']);
         }
 
         return $response;
@@ -116,7 +116,7 @@ class Client implements ClientContract
         $response = $this->httpClient->postRequest(InvoiceUrlConstants::INVOICE_STATUS, $request);
 
         if (!empty($response['error']) || $response['status'] !== 200) {
-            throw new InvoiceException($response['error'], $response['status']);
+            throw new InvoiceException(is_array($response['error']) ? json_encode($response['error'], JSON_THROW_ON_ERROR) : $response['error'], $response['status']);
         }
 
         return $response;
@@ -160,7 +160,7 @@ class Client implements ClientContract
         $response = $this->httpClient->postRequest(PayoffUrlConstants::GET_PAYOFF_STATUS, $request);
 
         if (!empty($response['error']) || $response['status'] !== 200) {
-            throw new PayoffException($response['error'], $response['status']);
+            throw new PayoffException(is_array($response['error']) ? json_encode($response['error'], JSON_THROW_ON_ERROR) : $response['error'], $response['status']);
         }
 
         return $response;
@@ -178,7 +178,7 @@ class Client implements ClientContract
         $response = $this->httpClient->postRequest(H2hUrlConstants::INVOICE_CREATE, $request);
 
         if (!empty($response['error']) || $response['status'] !== 200) {
-            throw new H2hException($response['error'], $response['status']);
+            throw new H2hException(is_array($response['error']) ? json_encode($response['error'], JSON_THROW_ON_ERROR) : $response['error'], $response['status']);
         }
 
         return $response;
@@ -196,7 +196,7 @@ class Client implements ClientContract
         $response = $this->httpClient->postRequest(H2hUrlConstants::SBP_INVOICE_CREATE, $request);
 
         if (!empty($response['error']) || $response['status'] !== 200) {
-            throw new H2hException($response['error'], $response['status']);
+            throw new H2hException(is_array($response['error']) ? json_encode($response['error'], JSON_THROW_ON_ERROR) : $response['error'], $response['status']);
         }
 
         return $response;
