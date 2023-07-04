@@ -4,6 +4,7 @@ namespace Test\Lava\Api\Mocks\Client;
 
 use Lava\Api\Contracts\Client\ClientContract;
 use Lava\Api\Exceptions\Invoice\InvoiceException;
+use Lava\Api\Exceptions\Payoff\CheckWalletException;
 use Lava\Api\Exceptions\Payoff\PayoffException;
 use Lava\Api\Exceptions\Refund\RefundException;
 use Lava\Api\Exceptions\Shop\ShopException;
@@ -164,7 +165,7 @@ class ClientErrorResponseMock implements ClientContract
      * @return array
      * @throws PayoffException
      */
-    public function CreateH2hInvoice(array $data): array
+    public function createH2hInvoice(array $data): array
     {
         $response = [
             'data' => null,
@@ -185,7 +186,7 @@ class ClientErrorResponseMock implements ClientContract
      * @return array
      * @throws PayoffException
      */
-    public function CreateH2hSbp(array $data): array
+    public function createH2hSbp(array $data): array
     {
         $response = [
             'data' => null,
@@ -196,6 +197,29 @@ class ClientErrorResponseMock implements ClientContract
 
         if (!empty($response['error']) || $response['status'] !== 200) {
             throw new PayoffException($response['error'], $response['status']);
+        }
+
+        return $response;
+    }
+
+    /**
+     * @param array $data
+     * @return array
+     * @throws CheckWalletException
+     */
+    public function checkWallet(array $data): array
+    {
+        $response = [
+            'data' => null,
+            'error' => [
+                "walletTo" => ["Account not found"]
+            ],
+            'status' => 422,
+            'status_check' => false
+        ];
+
+        if (!empty($response['error']) || $response['status'] !== 200) {
+            throw new CheckWalletException(is_array($response['error']) ? json_encode($response['error']) : $response['error'], $response['status']);
         }
 
         return $response;

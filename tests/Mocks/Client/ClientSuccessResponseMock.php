@@ -154,7 +154,7 @@ class ClientSuccessResponseMock implements ClientContract
      * @param array $data
      * @return array
      */
-    public function CreateH2hInvoice(array $data): array
+    public function createH2hInvoice(array $data): array
     {
         return [
             'data' => [
@@ -175,13 +175,28 @@ class ClientSuccessResponseMock implements ClientContract
      * @param array $data
      * @return array
      */
-    public function CreateH2hSbp(array $data): array
+    public function createH2hSbp(array $data): array
     {
         return [
             'data' => [
                 'sbp_url' => 'https://pay.lava.ru/sbp/f78ea11f-cd8a-4752-b8b1-36bc312ff886',
                 'fingerprint' => false,
                 'qr_code' => 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAM0AAADNCAIAAACU3mM+AAAABnRSTlMA/wD/AP83WBt9AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAEpElEQVR4nO3dy47jNhRF0VSQ///lzlwDBgQvt+XKWtO2Kbnr4IKU+Pj58+fPX3DZ35++Af4X5IyCnFGQMwpyRkHOKMgZBTmjIGcU5IyCnFGQMwpyRkHOKMgZBTmjIGcU5IyCnFH45+TLPz8/U/ex9ljE8LjuyRKHdVNbF8ruav3he05+kXpGQc4oyBkFOaNwNA54GFxyPNi3XTe1vueTDvjgGGKrqXf+FdQzCnJGQc4oyBmFyXHAw1Yv8t7T83WfeqvltZNBQ/bCY+3e5lHqGQU5oyBnFOSMwsVxwKcMdqKzuT3r6w7+ok9RzyjIGQU5oyBnFL5yHHDyiH9t8Kn94FKDX0A9oyBnFOSMgpxRuDgOuPfY+qSbPDi5/t5wZPC/7iUvD9QzCnJGQc4oyBmFyXHAp55ib/XHT1bknqzXvXdX66ZeQj2jIGcU5IyCnFH4ecnz4kGDc3tOFtm+c0fST1HPKMgZBTmjIGcULp4fMPjYenCt7zsfl69t/fzBkc3JbTyoZxTkjIKcUZAzCpPvA+49ts5aXrt3BsBg9/ydbxrUMwpyRkHOKMgZhcn3Afcm1WzdxrrlrX99tLy1QdDaS7b1f7g3LFDPKMgZBTmjIGcUvvJ9wFp2cu/g8t13fneQekZBzijIGQU5ozC5X1DW8X/JfPn1hR4+dd3BpqwP4O3kjIKcUZAzCt/xPmDrQtkenNlw5N4PzKhnFOSMgpxRkDMKR+OAe/3xb9wx/yU3+ZINgh7UMwpyRkHOKMgZhYvnCa9lj+nvPT1fryLeMrim4Z0rkNUzCnJGQc4oyBmFt5wnvNU9H5xUkxnsvJ9caHAu0xb1jIKcUZAzCnJG4WPrAwb7pw/39u/c8ql1Ce9cPaCeUZAzCnJGQc4odOcHbO22v9VdHTxteH0bJ+7d5Nrg+uQT6hkFOaMgZxTkjMLFeUGDx4rdu43s1N97Lx7eeYDwg3pGQc4oyBkFOaNw8fyAe6dfbcnODzi57qf2WL333Qf1jIKcUZAzCnJGodsvKHtOfe8Q4MG3FFsf3poWNTj+MC+ILyNnFOSMgpxROBoHDPYTPzV75yVnD2w5GZ1YH8BvJmcU5IyCnFGY3C/oP670oWfrD9mCgHs97neeGLymnlGQMwpyRkHOKEzuF/QwuAJgcPrKyXVfsphg/d0t2aoF9YyCnFGQMwpyRqF7HzBocAzxkl2MPvVd84L4VeSMgpxRkDMKF98HDDo5e2Cr5ZOm3tnT3/rwvT+oekZBzijIGQU5o3Bx39AT92bC3FuBPLirz5aTdcInTW1RzyjIGQU5oyBnFC7uG5pNuVk39ZLzA7Y+nB2ukFHPKMgZBTmjIGcUuvMDBp08pr93fsC9DZEGf+/WhQapZxTkjIKcUZAzCl85Dthyb4rRQ7YgYN3T/9RrmDX1jIKcUZAzCnJG4eI44F4f86RrP/h6YN3ylsHJS9nEpy3qGQU5oyBnFOSMwuQ44CVdzodPHQ12r+Vs+9LBWUPqGQU5oyBnFOSMwleeH8DXUc8oyBkFOaMgZxTkjIKcUZAzCnJGQc4oyBkFOaMgZxTkjIKcUZAzCnJGQc4oyBkFOaPwLwBAzrdcDGGbAAAAAElFTkSuQmCC'
+            ],
+            'status' => 200,
+            'status_check' => true
+        ];
+    }
+
+    /**
+     * @param array $data
+     * @return array
+     */
+    public function checkWallet(array $data): array
+    {
+        return [
+            'data' => [
+                'status' => true,
             ],
             'status' => 200,
             'status_check' => true

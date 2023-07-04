@@ -4,11 +4,14 @@ namespace Feature\Payoff;
 
 use Exception;
 use JsonException;
+use Lava\Api\Dto\Request\Payoff\CheckWalletRequestDto;
 use Lava\Api\Dto\Request\Payoff\CreatePayoffDto;
 use Lava\Api\Dto\Request\Payoff\GetPayoffStatusDto;
+use Lava\Api\Dto\Response\Payoff\CheckWalletResponseDto;
 use Lava\Api\Dto\Response\Payoff\CreatedPayoffDto;
 use Lava\Api\Dto\Response\Payoff\StatusPayoffDto;
 use Lava\Api\Exceptions\BaseException;
+use Lava\Api\Exceptions\Payoff\CheckWalletException;
 use Lava\Api\Exceptions\Payoff\PayoffException;
 use Lava\Api\Exceptions\Payoff\PayoffServiceException;
 use Lava\Api\Http\LavaFacade;
@@ -105,6 +108,48 @@ class PayoffTest extends TestCase
         }
 
         $this->assertEquals(CreatedPayoffDto::class, get_class($response));
+    }
+
+    public function testErrorCheckWalletStatus(): void
+    {
+        $shopId = uniqid('', true);
+        $secretKey = uniqid('', true);
+        $walletTo = uniqid('', true);
+
+        $checkWallet = new CheckWalletRequestDto('steam_payoff', $walletTo);
+
+        $mockClient = new ClientErrorResponseMock();
+        $facade = new LavaFacade($secretKey, $shopId, null, $mockClient);
+
+        try {
+            $response = $facade->checkWallet($checkWallet);
+        } catch (Exception $e) {
+            $this->assertEquals('{"walletTo":["Account not found"]}', $e->getMessage());
+            return;
+        }
+
+        $this->assertEquals(CreatedPayoffDto::class, get_class($response));
+    }
+
+
+    /**
+     * @throws JsonException
+     * @throws BaseException
+     * @throws CheckWalletException
+     */
+    public function testSuccessCheckWalletStatus(): void
+    {
+        $shopId = uniqid('', true);
+        $secretKey = uniqid('', true);
+        $walletTo = uniqid('', true);
+
+        $checkWallet = new CheckWalletRequestDto('steam_payoff', $walletTo);
+
+        $mockClient = new ClientSuccessResponseMock();
+        $facade = new LavaFacade($secretKey, $shopId, null, $mockClient);
+        $response = $facade->checkWallet($checkWallet);
+
+        $this->assertEquals(CheckWalletResponseDto::class, get_class($response));
     }
 
 }

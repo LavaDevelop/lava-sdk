@@ -51,11 +51,17 @@ interface ClientContract
      * @param array $data
      * @return array
      */
-    public function CreateH2hInvoice(array $data): array;
+    public function createH2hInvoice(array $data): array;
 
     /**
      * @param array $data
      * @return array
      */
-    public function CreateH2hSbp(array $data): array;
+    public function createH2hSbp(array $data): array;
+
+    /**
+     * @param array $data
+     * @return array
+     */
+    public function checkWallet(array $data): array;
 }

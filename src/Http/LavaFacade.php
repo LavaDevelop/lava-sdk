@@ -4,33 +4,36 @@ namespace Lava\Api\Http;
 
 use Exception;
 use JsonException;
-use Lava\Api\Exceptions\BaseException;
-use Lava\Api\Exceptions\H2h\H2hException;
-use Lava\Api\Exceptions\Invoice\InvoiceException;
-use Lava\Api\Exceptions\Payoff\PayoffException;
-use Lava\Api\Exceptions\Payoff\PayoffServiceException;
-use Lava\Api\Exceptions\Shop\ShopException;
 use Lava\Api\Contracts\Client\ClientCheckSignatureWebhookContract;
 use Lava\Api\Contracts\Client\ClientContract;
 use Lava\Api\Contracts\Client\ClientGenerateSignatureContract;
 use Lava\Api\Contracts\LavaFacadeContract;
-use Lava\Api\Dto\Response\H2h\CreatedH2hInvoiceDto;
-use Lava\Api\Dto\Response\H2h\CreatedSBPH2hDto;
 use Lava\Api\Dto\Request\H2h\CreateH2hInvoiceDto;
 use Lava\Api\Dto\Request\H2h\CreateSBPH2HDto;
 use Lava\Api\Dto\Request\Invoice\CreateInvoiceDto;
 use Lava\Api\Dto\Request\Invoice\GetStatusInvoiceDto;
+use Lava\Api\Dto\Request\Payoff\CheckWalletRequestDto;
 use Lava\Api\Dto\Request\Payoff\CreatePayoffDto;
 use Lava\Api\Dto\Request\Payoff\GetPayoffStatusDto;
 use Lava\Api\Dto\Request\Refund\CreateRefundDto;
 use Lava\Api\Dto\Request\Refund\GetStatusRefundDto;
+use Lava\Api\Dto\Response\H2h\CreatedH2hInvoiceDto;
+use Lava\Api\Dto\Response\H2h\CreatedSBPH2hDto;
 use Lava\Api\Dto\Response\Invoice\CreatedInvoiceDto;
 use Lava\Api\Dto\Response\Invoice\StatusInvoiceDto;
+use Lava\Api\Dto\Response\Payoff\CheckWalletResponseDto;
 use Lava\Api\Dto\Response\Payoff\CreatedPayoffDto;
 use Lava\Api\Dto\Response\Payoff\StatusPayoffDto;
 use Lava\Api\Dto\Response\Refund\CreatedRefundDto;
 use Lava\Api\Dto\Response\Refund\StatusRefundDto;
 use Lava\Api\Dto\Response\Shop\ShopBalanceDto;
+use Lava\Api\Exceptions\BaseException;
+use Lava\Api\Exceptions\H2h\H2hException;
+use Lava\Api\Exceptions\Invoice\InvoiceException;
+use Lava\Api\Exceptions\Payoff\CheckWalletException;
+use Lava\Api\Exceptions\Payoff\PayoffException;
+use Lava\Api\Exceptions\Payoff\PayoffServiceException;
+use Lava\Api\Exceptions\Shop\ShopException;
 use Lava\Api\Http\Client\Client;
 use Lava\Api\Http\Client\ClientCheckSignatureWebhook;
 use Lava\Api\Http\Client\ClientGenerateSignature;
@@ -38,6 +41,7 @@ use Lava\Api\Http\H2h\CreateH2hInvoice;
 use Lava\Api\Http\H2h\CreateH2HSbp;
 use Lava\Api\Http\Invoices\CreateInvoice;
 use Lava\Api\Http\Invoices\GetStatusInvoice;
+use Lava\Api\Http\Payoffs\CheckWalletDto;
 use Lava\Api\Http\Payoffs\CreatePayoff;
 use Lava\Api\Http\Payoffs\GetStatusPayoff;
 use Lava\Api\Http\Refund\CreateRefund;
@@ -47,9 +51,21 @@ use Lava\Api\Http\Shop\GetShopBalance;
 class LavaFacade implements LavaFacadeContract
 {
 
+    /**
+     * @var string
+     */
     private string $shopId;
+    /**
+     * @var ClientContract
+     */
     private ClientContract $client;
+    /**
+     * @var ClientGenerateSignatureContract
+     */
     private ClientGenerateSignatureContract $clientGenerateSign;
+    /**
+     * @var ClientCheckSignatureWebhookContract
+     */
     private ClientCheckSignatureWebhookContract $clientCheckWebhook;
 
     /**
@@ -82,6 +98,19 @@ class LavaFacade implements LavaFacadeContract
         $requestData['signature'] = $this->clientGenerateSign->generateSignature($requestData);
         $response = $this->client->createInvoice($requestData);
         return $createInvoice->toDto($response);
+    }
+
+    /**
+     * @param $requestData
+     * @return void
+     */
+    private function clearData(&$requestData): void
+    {
+        foreach ($requestData as $key => $value) {
+            if (is_null($value)) {
+                unset($requestData[$key]);
+            }
+        }
     }
 
     /**
@@ -197,7 +226,7 @@ class LavaFacade implements LavaFacadeContract
         $requestData = $getStatus->toArray($h2HInvoiceDto, $this->shopId);
         $this->clearData($requestData);
         $requestData['signature'] = $this->clientGenerateSign->generateSignature($requestData);
-        $response = $this->client->CreateH2hInvoice($requestData);
+        $response = $this->client->createH2hInvoice($requestData);
         return $getStatus->toDto($response);
     }
 
@@ -214,8 +243,25 @@ class LavaFacade implements LavaFacadeContract
         $requestData = $getStatus->toArray($h2HInvoiceDto, $this->shopId);
         $this->clearData($requestData);
         $requestData['signature'] = $this->clientGenerateSign->generateSignature($requestData);
-        $response = $this->client->CreateH2hSbp($requestData);
+        $response = $this->client->createH2hSbp($requestData);
         return $getStatus->toDto($response);
+    }
+
+    /**
+     * @param CheckWalletRequestDto $checkWallet
+     * @return CheckWalletResponseDto
+     * @throws BaseException
+     * @throws CheckWalletException
+     * @throws JsonException
+     */
+    public function checkWallet(CheckWalletRequestDto $checkWallet): CheckWalletResponseDto
+    {
+        $walletStatus = new CheckWalletDto();
+        $requestData = $walletStatus->toArray($checkWallet, $this->shopId);
+        $this->clearData($requestData);
+        $requestData['signature'] = $this->clientGenerateSign->generateSignature($requestData);
+        $response = $this->client->checkWallet($requestData);
+        return $walletStatus->toDto($response);
     }
 
     /**
@@ -227,18 +273,5 @@ class LavaFacade implements LavaFacadeContract
     public function checkSignWebhook(string $webhookResponse, string $signature): bool
     {
         return $this->clientCheckWebhook->checkSignWebhook($webhookResponse, $signature);
-    }
-
-    /**
-     * @param $requestData
-     * @return void
-     */
-    private function clearData(&$requestData): void
-    {
-        foreach ($requestData as $key => $value) {
-            if (is_null($value)) {
-                unset($requestData[$key]);
-            }
-        }
     }
 }

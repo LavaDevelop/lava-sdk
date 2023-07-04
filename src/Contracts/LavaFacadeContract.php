@@ -2,18 +2,20 @@
 
 namespace Lava\Api\Contracts;
 
-use Lava\Api\Dto\Response\H2h\CreatedH2hInvoiceDto;
-use Lava\Api\Dto\Response\H2h\CreatedSBPH2hDto;
 use Lava\Api\Dto\Request\H2h\CreateH2hInvoiceDto;
 use Lava\Api\Dto\Request\H2h\CreateSBPH2HDto;
 use Lava\Api\Dto\Request\Invoice\CreateInvoiceDto;
 use Lava\Api\Dto\Request\Invoice\GetStatusInvoiceDto;
+use Lava\Api\Dto\Request\Payoff\CheckWalletRequestDto;
 use Lava\Api\Dto\Request\Payoff\CreatePayoffDto;
 use Lava\Api\Dto\Request\Payoff\GetPayoffStatusDto;
 use Lava\Api\Dto\Request\Refund\CreateRefundDto;
 use Lava\Api\Dto\Request\Refund\GetStatusRefundDto;
+use Lava\Api\Dto\Response\H2h\CreatedH2hInvoiceDto;
+use Lava\Api\Dto\Response\H2h\CreatedSBPH2hDto;
 use Lava\Api\Dto\Response\Invoice\CreatedInvoiceDto;
 use Lava\Api\Dto\Response\Invoice\StatusInvoiceDto;
+use Lava\Api\Dto\Response\Payoff\CheckWalletResponseDto;
 use Lava\Api\Dto\Response\Payoff\CreatedPayoffDto;
 use Lava\Api\Dto\Response\Payoff\StatusPayoffDto;
 use Lava\Api\Dto\Response\Refund\CreatedRefundDto;
@@ -82,5 +84,7 @@ interface LavaFacadeContract
      * @return CreatedSBPH2hDto
      */
     public function createH2HSpbInvoice(CreateSBPH2HDto $h2HInvoiceDto): CreatedSBPH2hDto;
+
+    public function checkWallet(CheckWalletRequestDto $checkWallet): CheckWalletResponseDto;
 
 }
