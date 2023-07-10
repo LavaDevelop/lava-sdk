@@ -34,6 +34,10 @@ class Client implements ClientContract
         $this->httpClient = new HttpClient();
     }
 
+    /**
+     * @param HttpClientContract $httpClient
+     * @return void
+     */
     public function setHttpClient(HttpClientContract $httpClient): void
     {
         $this->httpClient = $httpClient;
@@ -224,6 +228,26 @@ class Client implements ClientContract
 
         $request = json_encode($data, JSON_THROW_ON_ERROR);
         $response = $this->httpClient->postRequest(PayoffUrlConstants::CHECK_USER_WALLET, $request);
+
+        if (!empty($response['error']) || $response['status'] !== 200) {
+            throw new CheckWalletException(is_array($response['error']) ? json_encode($response['error'], JSON_THROW_ON_ERROR) : $response['error'], $response['status']);
+        }
+
+        return $response;
+    }
+
+
+    /**
+     * @param array $data
+     * @return array
+     * @throws BaseException
+     * @throws CheckWalletException
+     * @throws JsonException
+     */
+    public function getPayoffTariffs(array $data): array
+    {
+        $request = json_encode($data, JSON_THROW_ON_ERROR);
+        $response = $this->httpClient->postRequest(PayoffUrlConstants::GET_PAYOFF_TARIFFS, $request);
 
         if (!empty($response['error']) || $response['status'] !== 200) {
             throw new CheckWalletException(is_array($response['error']) ? json_encode($response['error'], JSON_THROW_ON_ERROR) : $response['error'], $response['status']);

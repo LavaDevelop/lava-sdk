@@ -64,4 +64,10 @@ interface ClientContract
      * @return array
      */
     public function checkWallet(array $data): array;
+
+    /**
+     * @param array $data
+     * @return array
+     */
+    public function getPayoffTariffs(array $data): array;
 }

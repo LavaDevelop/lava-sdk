@@ -2,6 +2,7 @@
 
 namespace Lava\Api\Contracts;
 
+use JsonException;
 use Lava\Api\Dto\Request\H2h\CreateH2hInvoiceDto;
 use Lava\Api\Dto\Request\H2h\CreateSBPH2HDto;
 use Lava\Api\Dto\Request\Invoice\CreateInvoiceDto;
@@ -21,6 +22,8 @@ use Lava\Api\Dto\Response\Payoff\StatusPayoffDto;
 use Lava\Api\Dto\Response\Refund\CreatedRefundDto;
 use Lava\Api\Dto\Response\Refund\StatusRefundDto;
 use Lava\Api\Dto\Response\Shop\ShopBalanceDto;
+use Lava\Api\Exceptions\BaseException;
+use Lava\Api\Exceptions\Payoff\CheckWalletException;
 
 interface LavaFacadeContract
 {
@@ -84,6 +87,13 @@ interface LavaFacadeContract
      * @return CreatedSBPH2hDto
      */
     public function createH2HSpbInvoice(CreateSBPH2HDto $h2HInvoiceDto): CreatedSBPH2hDto;
+
+    /**
+     * @throws JsonException
+     * @throws BaseException
+     * @throws CheckWalletException
+     */
+    public function getPayoffTariffs(): array;
 
     public function checkWallet(CheckWalletRequestDto $checkWallet): CheckWalletResponseDto;
 

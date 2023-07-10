@@ -2,11 +2,12 @@
 
 namespace Lava\Api\Http\Payoffs;
 
+use Lava\Api\Contracts\Payoff\CheckWalletContract;
 use Lava\Api\Dto\Request\Payoff\CheckWalletRequestDto;
 use Lava\Api\Dto\Response\Payoff\CheckWalletResponseDto;
 use Lava\Api\Exceptions\BaseException;
 
-class CheckWalletDto
+class CheckWalletDto implements CheckWalletContract
 {
 
 

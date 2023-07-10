@@ -44,6 +44,7 @@ use Lava\Api\Http\Invoices\GetStatusInvoice;
 use Lava\Api\Http\Payoffs\CheckWalletDto;
 use Lava\Api\Http\Payoffs\CreatePayoff;
 use Lava\Api\Http\Payoffs\GetStatusPayoff;
+use Lava\Api\Http\Payoffs\TariffDto;
 use Lava\Api\Http\Refund\CreateRefund;
 use Lava\Api\Http\Refund\GetRefundStatus;
 use Lava\Api\Http\Shop\GetShopBalance;
@@ -245,6 +246,19 @@ class LavaFacade implements LavaFacadeContract
         $requestData['signature'] = $this->clientGenerateSign->generateSignature($requestData);
         $response = $this->client->createH2hSbp($requestData);
         return $getStatus->toDto($response);
+    }
+
+    /**
+     * @throws JsonException
+     * @throws BaseException
+     * @throws CheckWalletException
+     */
+    public function getPayoffTariffs(): array
+    {
+        $tariffs = new TariffDto();
+        $requestData['signature'] = $this->clientGenerateSign->generateSignature(['shopId' => $this->shopId]);
+        $response = $this->client->getPayoffTariffs($requestData);
+        return $tariffs->toDto($response);
     }
 
     /**
