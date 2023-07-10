@@ -15,15 +15,15 @@ class TariffDto implements TariffContract
     {
         $tariffs = [];
 
-        foreach ($response['data'] as $tariff) {
+        foreach ($response['data']['tariffs'] as $tariff) {
             $tariffs[] = new TariffResponseDto(
                 $tariff['percent'],
-                $tariff['maxSum'],
+                $tariff['max_sum'],
                 $tariff['service'],
                 $tariff['fix'],
                 $tariff['title'],
                 $tariff['currency'],
-                $tariff['minSum']
+                $tariff['min_sum']
             );
         }
 
