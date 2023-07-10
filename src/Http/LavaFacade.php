@@ -256,7 +256,8 @@ class LavaFacade implements LavaFacadeContract
     public function getPayoffTariffs(): array
     {
         $tariffs = new TariffDto();
-        $requestData['signature'] = $this->clientGenerateSign->generateSignature(['shopId' => $this->shopId]);
+        $requestData['shopId'] = $this->shopId;
+        $requestData['signature'] = $this->clientGenerateSign->generateSignature($requestData);
         $response = $this->client->getPayoffTariffs($requestData);
         return $tariffs->toDto($response);
     }

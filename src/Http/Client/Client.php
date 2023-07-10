@@ -16,6 +16,7 @@ use Lava\Api\Exceptions\BaseException;
 use Lava\Api\Exceptions\H2h\H2hException;
 use Lava\Api\Exceptions\Invoice\InvoiceException;
 use Lava\Api\Exceptions\Payoff\CheckWalletException;
+use Lava\Api\Exceptions\Payoff\ErrorGetPayoffTariffException;
 use Lava\Api\Exceptions\Payoff\PayoffException;
 use Lava\Api\Exceptions\Payoff\PayoffServiceException;
 use Lava\Api\Exceptions\Refund\RefundException;
@@ -241,8 +242,8 @@ class Client implements ClientContract
      * @param array $data
      * @return array
      * @throws BaseException
-     * @throws CheckWalletException
      * @throws JsonException
+     * @throws ErrorGetPayoffTariffException
      */
     public function getPayoffTariffs(array $data): array
     {
@@ -250,7 +251,7 @@ class Client implements ClientContract
         $response = $this->httpClient->postRequest(PayoffUrlConstants::GET_PAYOFF_TARIFFS, $request);
 
         if (!empty($response['error']) || $response['status'] !== 200) {
-            throw new CheckWalletException(is_array($response['error']) ? json_encode($response['error'], JSON_THROW_ON_ERROR) : $response['error'], $response['status']);
+            throw new ErrorGetPayoffTariffException(is_array($response['error']) ? json_encode($response['error'], JSON_THROW_ON_ERROR) : $response['error'], $response['status']);
         }
 
         return $response;
