@@ -15,7 +15,7 @@ class TariffDto implements TariffContract
     {
         $tariffs = [];
 
-        foreach ($response as $tariff) {
+        foreach ($response['data'] as $tariff) {
             $tariffs[] = new TariffResponseDto(
                 $tariff['percent'],
                 $tariff['maxSum'],

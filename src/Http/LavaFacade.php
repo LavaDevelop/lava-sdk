@@ -31,6 +31,7 @@ use Lava\Api\Exceptions\BaseException;
 use Lava\Api\Exceptions\H2h\H2hException;
 use Lava\Api\Exceptions\Invoice\InvoiceException;
 use Lava\Api\Exceptions\Payoff\CheckWalletException;
+use Lava\Api\Exceptions\Payoff\ErrorGetPayoffTariffException;
 use Lava\Api\Exceptions\Payoff\PayoffException;
 use Lava\Api\Exceptions\Payoff\PayoffServiceException;
 use Lava\Api\Exceptions\Shop\ShopException;
@@ -251,7 +252,7 @@ class LavaFacade implements LavaFacadeContract
     /**
      * @throws JsonException
      * @throws BaseException
-     * @throws CheckWalletException
+     * @throws ErrorGetPayoffTariffException
      */
     public function getPayoffTariffs(): array
     {
