@@ -250,7 +250,7 @@ class Client implements ClientContract
         $request = json_encode($data, JSON_THROW_ON_ERROR);
         $response = $this->httpClient->postRequest(PayoffUrlConstants::GET_PAYOFF_TARIFFS, $request);
 
-        if (!empty($response['error']) || $response['status'] !== 200 || !empty($response['data']['tariffs'])) {
+        if (!empty($response['error']) || $response['status'] !== 200 || empty($response['data']['tariffs'])) {
             throw new ErrorGetPayoffTariffException(is_array($response['error']) ? json_encode($response['error'], JSON_THROW_ON_ERROR) : $response['error'], $response['status']);
         }
 
