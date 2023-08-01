@@ -1,19 +1,25 @@
 # Lava sdk #
+
 ______
 
 ### ![compatible](https://img.shields.io/badge/php-%5E7.4-green?style=plastic) ###
 
 ## Установка ##
+
 _____
+
 ```
 composer require lava-payment/lava
 ```
+
 ## Использование ##
+
 ___
 
 Для работы нужно получить секретный ключ магазина.
 
 ### Инициализация  ###
+
 ____
 
 ```php 
@@ -23,6 +29,7 @@ $facade = new LavaFacade('your secret key', 'shopId', 'your additional key');
 ```
 
 ### Получение баланса магазина ###
+
 ___
 
 ```php 
@@ -34,6 +41,7 @@ $response = $facade->getShopBalance();
 При не успешном запросе возникает исключение с сообщением и кодом ответа.
 
 ### Создание платежа ###
+
 ___
 
 Метод createInvoice на вход принимает объект createInvoiceDto, который в свою очередь
@@ -61,6 +69,7 @@ $response = $facade->createInvoice($createInvoiceDto);
 При не успешном запросе возникает исключение с сообщением и кодом ответа.
 
 ### Проверка статуса платежа ###
+
 ___
 
 Метод checkStatusInvoice на вход принимает объект GetStatusInvoiceDto, который принимает 2 параметра 1 из них
@@ -83,6 +92,7 @@ $response = $facade->checkStatusInvoice($statusInvoice);
 При не успешном запросе возникает исключение с сообщением и кодом ответа.
 
 ### Создание вывода ###
+
 ___
 
 Метод createPayoff на вход принимает объект CreatePayoffDto, который принимает 3 обязательных параметра:
@@ -104,6 +114,7 @@ refundId - id вывода в нашей системе и status - текущи
 При не успешном запросе возникает исключение с сообщением и кодом ответа.
 
 ### Информация о выводе ###
+
 ___
 
 Метод getStatusPayoff на вход принимает объект GetPayoffStatusDto, который принимает 2 параметра 1 из них обязателен.
@@ -125,6 +136,7 @@ $response = $facade->getStatusPayoff($payoffStatus);
 При не успешном запросе возникает исключение с сообщением и кодом ответа.
 
 ### Создание возврата ###
+
 ___
 
 Метод createRefund на вход принимает объект CreateRefundDto, который принимает 1 обязательный параметр
@@ -143,6 +155,7 @@ $response = $facade->createRefund($refundCreate);
 При не успешном запросе возникает исключение с сообщением и кодом ответа.
 
 ### Информация о возврате ###
+
 ___
 
 Метод checkStatusRefund на вход принимает объект GetStatusRefundDto, который принимает 1 обязательный параметр
@@ -161,6 +174,7 @@ $response = $facade->checkStatusRefund($refundGetStatus);
 При не успешном запросе возникает исключение с сообщением и кодом ответа.
 
 ### Создание инвойса H2H ###
+
 ___
 
 Метод createH2hInvoice на вход принимает объект CreateH2hInvoiceDto, который принимает 6 обязательных параметров
@@ -191,6 +205,7 @@ $response = $facade->createH2hInvoice($h2hCreate);
 При не успешном запросе возникает исключение с сообщением и кодом ответа.
 
 ### Создание инвойса H2H СБП ###
+
 ___
 
 
@@ -216,6 +231,7 @@ $response = $facade->createH2HSpbInvoice($h2hCreate);
 При не успешном запросе возникает исключение с сообщением и кодом ответа.
 
 ### Проверка подписи веб хука ###
+
 ___
 
 Метод checkSignWebhook принимает 2 параметра тело запроса в формате json и подпись с заголовка 'Authorization'.
@@ -229,5 +245,5 @@ if(!isset($hookSignature['Authorization'])) {
     throw new Exception();
 }
 
-$facade->checkSignWebhook($hookSignature['Authorization'], $signature);
+$facade->checkSignWebhook($data, $hookSignature['Authorization']);
 ```
