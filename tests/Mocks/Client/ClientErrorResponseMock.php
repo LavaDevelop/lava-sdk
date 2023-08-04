@@ -224,4 +224,9 @@ class ClientErrorResponseMock implements ClientContract
 
         return $response;
     }
+
+    public function getPayoffTariffs(array $data): array
+    {
+        return [];
+    }
 }

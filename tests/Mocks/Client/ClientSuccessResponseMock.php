@@ -202,4 +202,9 @@ class ClientSuccessResponseMock implements ClientContract
             'status_check' => true
         ];
     }
+
+    public function getPayoffTariffs(array $data): array
+    {
+        return [];
+    }
 }
