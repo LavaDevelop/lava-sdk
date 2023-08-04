@@ -4,8 +4,8 @@ namespace Lava\Api\Http\Client;
 
 use JsonException;
 use Lava\Api\Constants\ClientConstants;
-use Lava\Api\Exceptions\BaseException;
 use Lava\Api\Contracts\Client\HttpClientContract;
+use Lava\Api\Exceptions\BaseException;
 
 class HttpClient implements HttpClientContract
 {
@@ -13,11 +13,12 @@ class HttpClient implements HttpClientContract
     /**
      * @param string $method
      * @param string $data
+     * @param int $timeout
      * @return array
      * @throws BaseException
      * @throws JsonException
      */
-    public function postRequest(string $method, string $data): array
+    public function postRequest(string $method, string $data, int $timeout = 5): array
     {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, ClientConstants::URL . $method);
@@ -44,11 +45,12 @@ class HttpClient implements HttpClientContract
     /**
      * @param string $method
      * @param array $data
+     * @param int $timeout
      * @return array
-     * @throws JsonException
      * @throws BaseException
+     * @throws JsonException
      */
-    public function getRequest(string $method, array $data): array
+    public function getRequest(string $method, array $data, int $timeout = 5): array
     {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, ClientConstants::URL . $method . '/' . http_build_query($data));

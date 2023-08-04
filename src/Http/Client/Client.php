@@ -228,7 +228,7 @@ class Client implements ClientContract
         }
 
         $request = json_encode($data, JSON_THROW_ON_ERROR);
-        $response = $this->httpClient->postRequest(PayoffUrlConstants::CHECK_USER_WALLET, $request);
+        $response = $this->httpClient->postRequest(PayoffUrlConstants::CHECK_USER_WALLET, $request, 35);
 
         if (!empty($response['error']) || $response['status'] !== 200) {
             throw new CheckWalletException(is_array($response['error']) ? json_encode($response['error'], JSON_THROW_ON_ERROR) : $response['error'], $response['status']);

@@ -6,7 +6,7 @@ namespace Lava\Api\Dto\Request\Invoice;
 class CreateInvoiceDto
 {
 
-    private float $sum;
+    private string $sum;
     private string $orderId;
     private ?string $hookUrl;
     private ?string $successUrl;
@@ -18,7 +18,7 @@ class CreateInvoiceDto
     private ?array $excludeService;
 
     /**
-     * @param float $sum
+     * @param string $sum
      * @param string $orderId
      * @param string|null $hookUrl
      * @param string|null $successUrl
@@ -29,7 +29,7 @@ class CreateInvoiceDto
      * @param array|null $excludeService
      * @param array|null $includeService
      */
-    public function __construct(float $sum, string $orderId, ?string $hookUrl = null, ?string $successUrl = null, ?string $failUrl = null, ?int $expire = null, ?string $customFields = null, ?string $comment = null, ?array $excludeService = null, ?array $includeService = null)
+    public function __construct(string $sum, string $orderId, ?string $hookUrl = null, ?string $successUrl = null, ?string $failUrl = null, ?int $expire = null, ?string $customFields = null, ?string $comment = null, ?array $excludeService = null, ?array $includeService = null)
     {
         $this->sum = $sum;
         $this->orderId = $orderId;
@@ -44,9 +44,9 @@ class CreateInvoiceDto
     }
 
     /**
-     * @return float
+     * @return string
      */
-    public function getSum(): float
+    public function getSum(): string
     {
         return $this->sum;
     }
