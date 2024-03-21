@@ -7,7 +7,8 @@ use Lava\Api\Constants\ClientConstants;
 use Lava\Api\Contracts\Client\HttpClientContract;
 use Lava\Api\Exceptions\BaseException;
 
-class HttpClient implements HttpClientContract {
+class HttpClient implements HttpClientContract
+{
 
     /**
      * @param string $method
@@ -18,7 +19,8 @@ class HttpClient implements HttpClientContract {
      * @throws BaseException
      * @throws JsonException
      */
-    public function postRequest(string $method, string $data, int $timeout = 5): array {
+    public function postRequest(string $method, string $data, int $timeout = 5): array
+    {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, ClientConstants::URL . $method);
         curl_setopt(
@@ -49,9 +51,10 @@ class HttpClient implements HttpClientContract {
      * @throws BaseException
      * @throws JsonException
      */
-    public function getRequest(string $method, array $data, int $timeout = 5): array {
+    public function getRequest(string $method, array $data, int $timeout = 5): array
+    {
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, ClientConstants::URL . $method . '/' . http_build_query($data));
+        curl_setopt($ch, CURLOPT_URL, ClientConstants::URL . $method . '?' . http_build_query($data));
         curl_setopt(
             $ch, CURLOPT_HTTPHEADER, ['Accept: application/json', 'Content-Type: application/json']
         );

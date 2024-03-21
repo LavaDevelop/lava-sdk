@@ -37,7 +37,21 @@ class StatusInvoiceDto
      * @param array|null $includeService
      * @param array|null $excludeService
      */
-    public function __construct(string $status, ?string $errorMessage, string $invoiceId, string $shopId, float $amount, string $expire, string $orderId, ?string $failUrl, ?string $successUrl, ?string $hookUrl, ?string $customFields, ?array $includeService, ?array $excludeService)
+    public function __construct(
+        string  $status,
+        ?string $errorMessage,
+        string  $invoiceId,
+        string  $shopId,
+        float   $amount,
+        string  $expire,
+        string  $orderId,
+        ?string $failUrl,
+        ?string $successUrl,
+        ?string $hookUrl,
+        ?string $customFields,
+        ?array  $includeService,
+        ?array  $excludeService
+    )
     {
         $this->status = $status;
         $this->errorMessage = $errorMessage;

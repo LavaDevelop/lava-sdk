@@ -37,6 +37,7 @@ class Client implements ClientContract
 
     /**
      * @param HttpClientContract $httpClient
+     *
      * @return void
      */
     public function setHttpClient(HttpClientContract $httpClient): void
@@ -46,6 +47,7 @@ class Client implements ClientContract
 
     /**
      * @param array $data
+     *
      * @return array
      * @throws JsonException|RefundException|BaseException
      */
@@ -63,6 +65,7 @@ class Client implements ClientContract
 
     /**
      * @param array $data
+     *
      * @return array
      * @throws JsonException|RefundException|BaseException
      */
@@ -79,6 +82,7 @@ class Client implements ClientContract
 
     /**
      * @param array $data
+     *
      * @return array
      * @throws JsonException
      * @throws ShopException|BaseException
@@ -97,6 +101,7 @@ class Client implements ClientContract
 
     /**
      * @param array $data
+     *
      * @return array
      * @throws JsonException
      * @throws InvoiceException|BaseException
@@ -114,6 +119,7 @@ class Client implements ClientContract
 
     /**
      * @param array $data
+     *
      * @return array
      * @throws InvoiceException
      * @throws JsonException|BaseException
@@ -136,6 +142,7 @@ class Client implements ClientContract
 
     /**
      * @param array $data
+     *
      * @return array
      * @throws JsonException
      * @throws PayoffException|PayoffServiceException|BaseException
@@ -158,6 +165,7 @@ class Client implements ClientContract
 
     /**
      * @param array $data
+     *
      * @return array
      * @throws JsonException
      * @throws PayoffException|BaseException
@@ -180,6 +188,7 @@ class Client implements ClientContract
 
     /**
      * @param array $data
+     *
      * @return array
      * @throws H2hException
      * @throws JsonException|BaseException
@@ -198,6 +207,7 @@ class Client implements ClientContract
 
     /**
      * @param array $data
+     *
      * @return array
      * @throws H2hException
      * @throws JsonException|BaseException
@@ -216,6 +226,7 @@ class Client implements ClientContract
 
     /**
      * @param array $data
+     *
      * @return array
      * @throws BaseException
      * @throws CheckWalletException
@@ -237,9 +248,9 @@ class Client implements ClientContract
         return $response;
     }
 
-
     /**
      * @param array $data
+     *
      * @return array
      * @throws BaseException
      * @throws JsonException
@@ -252,6 +263,22 @@ class Client implements ClientContract
 
         if (!empty($response['error']) || $response['status'] !== 200 || empty($response['data']['tariffs'])) {
             throw new ErrorGetPayoffTariffException(is_array($response['error']) ? json_encode($response['error'], JSON_THROW_ON_ERROR) : $response['error'], $response['status']);
+        }
+
+        return $response;
+    }
+
+    /**
+     * @throws JsonException
+     * @throws BaseException|InvoiceException
+     */
+    public function getAvailibleTariffs(array $data): array
+    {
+        $request = json_encode($data, JSON_THROW_ON_ERROR);
+        $response = $this->httpClient->postRequest(InvoiceUrlConstants::GET_AVAILIBLE_TARIFFS, $request);
+
+        if (!empty($response['error']) || $response['status'] !== 200) {
+            throw new InvoiceException(is_array($response['error']) ? json_encode($response['error'], JSON_THROW_ON_ERROR) : $response['error'], $response['status']);
         }
 
         return $response;

@@ -14,6 +14,7 @@ use Lava\Api\Dto\Request\Refund\CreateRefundDto;
 use Lava\Api\Dto\Request\Refund\GetStatusRefundDto;
 use Lava\Api\Dto\Response\H2h\CreatedH2hInvoiceDto;
 use Lava\Api\Dto\Response\H2h\CreatedSBPH2hDto;
+use Lava\Api\Dto\Response\Invoice\AvailibleTariffDto;
 use Lava\Api\Dto\Response\Invoice\CreatedInvoiceDto;
 use Lava\Api\Dto\Response\Invoice\StatusInvoiceDto;
 use Lava\Api\Dto\Response\Payoff\CheckWalletResponseDto;
@@ -23,6 +24,7 @@ use Lava\Api\Dto\Response\Refund\CreatedRefundDto;
 use Lava\Api\Dto\Response\Refund\StatusRefundDto;
 use Lava\Api\Dto\Response\Shop\ShopBalanceDto;
 use Lava\Api\Exceptions\BaseException;
+use Lava\Api\Exceptions\Invoice\InvoiceException;
 use Lava\Api\Exceptions\Payoff\CheckWalletException;
 
 interface LavaFacadeContract
@@ -30,24 +32,28 @@ interface LavaFacadeContract
 
     /**
      * @param CreateInvoiceDto $invoice
+     *
      * @return CreatedInvoiceDto
      */
     public function createInvoice(CreateInvoiceDto $invoice): CreatedInvoiceDto;
 
     /**
      * @param GetStatusInvoiceDto $statusInvoice
+     *
      * @return StatusInvoiceDto
      */
     public function checkStatusInvoice(GetStatusInvoiceDto $statusInvoice): StatusInvoiceDto;
 
     /**
      * @param CreateRefundDto $refundDto
+     *
      * @return CreatedRefundDto
      */
     public function createRefund(CreateRefundDto $refundDto): CreatedRefundDto;
 
     /**
      * @param GetStatusRefundDto $refundDto
+     *
      * @return StatusRefundDto
      */
     public function checkStatusRefund(GetStatusRefundDto $refundDto): StatusRefundDto;
@@ -59,12 +65,14 @@ interface LavaFacadeContract
 
     /**
      * @param CreatePayoffDto $payoff
+     *
      * @return CreatedPayoffDto
      */
     public function createPayoff(CreatePayoffDto $payoff): CreatedPayoffDto;
 
     /**
      * @param GetPayoffStatusDto $payoffStatus
+     *
      * @return StatusPayoffDto
      */
     public function getStatusPayoff(GetPayoffStatusDto $payoffStatus): StatusPayoffDto;
@@ -72,18 +80,21 @@ interface LavaFacadeContract
     /**
      * @param string $webhookResponse
      * @param string $signature
+     *
      * @return bool
      */
     public function checkSignWebhook(string $webhookResponse, string $signature): bool;
 
     /**
      * @param CreateH2hInvoiceDto $h2HInvoiceDto
+     *
      * @return CreatedH2hInvoiceDto
      */
     public function createH2hInvoice(CreateH2hInvoiceDto $h2HInvoiceDto): CreatedH2hInvoiceDto;
 
     /**
      * @param CreateSBPH2HDto $h2HInvoiceDto
+     *
      * @return CreatedSBPH2hDto
      */
     public function createH2HSpbInvoice(CreateSBPH2HDto $h2HInvoiceDto): CreatedSBPH2hDto;
@@ -95,6 +106,23 @@ interface LavaFacadeContract
      */
     public function getPayoffTariffs(): array;
 
+    /**
+     * @param CheckWalletRequestDto $checkWallet
+     *
+     * @return CheckWalletResponseDto
+     * @throws BaseException
+     * @throws CheckWalletException
+     * @throws JsonException
+     */
     public function checkWallet(CheckWalletRequestDto $checkWallet): CheckWalletResponseDto;
+
+
+    /**
+     * @return array<AvailibleTariffDto>
+     * @throws BaseException
+     * @throws InvoiceException
+     * @throws JsonException
+     */
+    public function getAvailibleTariffs(): array;
 
 }

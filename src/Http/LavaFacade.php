@@ -41,6 +41,7 @@ use Lava\Api\Http\Client\ClientGenerateSignature;
 use Lava\Api\Http\H2h\CreateH2hInvoice;
 use Lava\Api\Http\H2h\CreateH2HSbp;
 use Lava\Api\Http\Invoices\CreateInvoice;
+use Lava\Api\Http\Invoices\GetAvailibleTariffsDto;
 use Lava\Api\Http\Invoices\GetStatusInvoice;
 use Lava\Api\Http\Payoffs\CheckWalletDto;
 use Lava\Api\Http\Payoffs\CreatePayoff;
@@ -78,7 +79,14 @@ class LavaFacade implements LavaFacadeContract
      * @param ClientGenerateSignatureContract|null $clientGenerateSign
      * @param ClientCheckSignatureWebhookContract|null $clientCheckWebhook
      */
-    public function __construct(string $secretKey, string $shopId, string $additionalKey = null, ?ClientContract $client = null, ?ClientGenerateSignatureContract $clientGenerateSign = null, ?ClientCheckSignatureWebhookContract $clientCheckWebhook = null)
+    public function __construct(
+        string                               $secretKey,
+        string                               $shopId,
+        string                               $additionalKey = null,
+        ?ClientContract                      $client = null,
+        ?ClientGenerateSignatureContract     $clientGenerateSign = null,
+        ?ClientCheckSignatureWebhookContract $clientCheckWebhook = null
+    )
     {
         $this->shopId = $shopId;
         $this->client = $client ?? new Client();
@@ -88,6 +96,7 @@ class LavaFacade implements LavaFacadeContract
 
     /**
      * @param CreateInvoiceDto $invoice
+     *
      * @return CreatedInvoiceDto
      * @throws JsonException
      * @throws BaseException|InvoiceException
@@ -104,6 +113,7 @@ class LavaFacade implements LavaFacadeContract
 
     /**
      * @param $requestData
+     *
      * @return void
      */
     private function clearData(&$requestData): void
@@ -117,6 +127,7 @@ class LavaFacade implements LavaFacadeContract
 
     /**
      * @param GetStatusInvoiceDto $statusInvoice
+     *
      * @return StatusInvoiceDto
      * @throws BaseException
      * @throws JsonException
@@ -134,6 +145,7 @@ class LavaFacade implements LavaFacadeContract
 
     /**
      * @param CreateRefundDto $refundDto
+     *
      * @return CreatedRefundDto
      * @throws JsonException
      * @throws Exception
@@ -150,6 +162,7 @@ class LavaFacade implements LavaFacadeContract
 
     /**
      * @param GetStatusRefundDto $refundDto
+     *
      * @return StatusRefundDto
      * @throws JsonException
      * @throws Exception
@@ -181,6 +194,7 @@ class LavaFacade implements LavaFacadeContract
 
     /**
      * @param CreatePayoffDto $payoff
+     *
      * @return CreatedPayoffDto
      * @throws BaseException
      * @throws JsonException
@@ -199,6 +213,7 @@ class LavaFacade implements LavaFacadeContract
 
     /**
      * @param GetPayoffStatusDto $payoffStatus
+     *
      * @return StatusPayoffDto
      * @throws BaseException
      * @throws JsonException
@@ -216,6 +231,7 @@ class LavaFacade implements LavaFacadeContract
 
     /**
      * @param CreateH2hInvoiceDto $h2HInvoiceDto
+     *
      * @return CreatedH2hInvoiceDto
      * @throws BaseException
      * @throws JsonException
@@ -234,6 +250,7 @@ class LavaFacade implements LavaFacadeContract
 
     /**
      * @param CreateSBPH2HDto $h2HInvoiceDto
+     *
      * @return CreatedSBPH2hDto
      * @throws BaseException
      * @throws H2hException
@@ -265,6 +282,7 @@ class LavaFacade implements LavaFacadeContract
 
     /**
      * @param CheckWalletRequestDto $checkWallet
+     *
      * @return CheckWalletResponseDto
      * @throws BaseException
      * @throws CheckWalletException
@@ -283,11 +301,27 @@ class LavaFacade implements LavaFacadeContract
     /**
      * @param string $webhookResponse
      * @param string $signature
+     *
      * @return bool
      * @throws JsonException
      */
     public function checkSignWebhook(string $webhookResponse, string $signature): bool
     {
         return $this->clientCheckWebhook->checkSignWebhook($webhookResponse, $signature);
+    }
+
+    /**
+     * @return array
+     * @throws BaseException
+     * @throws InvoiceException
+     * @throws JsonException
+     */
+    public function getAvailibleTariffs(): array
+    {
+        $availibleTariffs = new GetAvailibleTariffsDto();
+        $requestData['shopId'] = $this->shopId;
+        $requestData['signature'] = $this->clientGenerateSign->generateSignature($requestData);
+        $response = $this->client->getAvailibleTariffs($requestData);
+        return $availibleTariffs->toDto($response);
     }
 }

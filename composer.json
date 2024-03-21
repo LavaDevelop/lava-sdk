@@ -2,7 +2,7 @@
   "name": "lava-payment/lava",
   "type": "library",
   "description": "Lava payment sdk",
-  "minimum-stability": "stable",
+  "minimum-stability": "",
   "keywords": [
     "lava",
     "lava-sdk",
