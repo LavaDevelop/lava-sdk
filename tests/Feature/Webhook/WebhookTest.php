@@ -3,12 +3,12 @@
 namespace Feature\Webhook;
 
 use JsonException;
+use Lava\Api\Dto\Secret\ProfileSecretDto;
 use Lava\Api\Http\LavaFacade;
 use PHPUnit\Framework\TestCase;
 
 class WebhookTest extends TestCase
 {
-
     /**
      * @return void
      * @throws JsonException
@@ -35,6 +35,49 @@ class WebhookTest extends TestCase
         $facade = new LavaFacade($shopId, $secretKey, $additionalKey);
         $isTrue = $facade->checkSignWebhook(json_encode($data, JSON_THROW_ON_ERROR), $signature);
         $this->assertTrue($isTrue);
+    }
+
+    /**
+     * @return void
+     * @throws JsonException
+     */
+    public function testPayoffWebhookSuccess(): void
+    {
+        $shopId = uniqid('', true);
+        $secretKey = uniqid('', true);
+        $additionalKey = uniqid('', true);
+
+        $profileSecretData = new ProfileSecretDto(
+            uniqid('', true),
+            uniqid('', true),
+            uniqid('', true),
+        );
+
+        $data = [
+            'payoff_id' => uniqid('', true),
+            'status' => 'success',
+            'payoff_time' => '2026-03-16 12:01:43',
+            'payoff_service' => 'card',
+            'type' => 3,
+            'credited' => '10000.00',
+            'order_id' => uniqid('', true),
+        ];
+
+        $signature = $this->generateSign($data, $profileSecretData->getAdditionalKey());
+
+        $facade = new LavaFacade($shopId, $secretKey, $additionalKey, null, null, null, $profileSecretData);
+        $isTrue = $facade->checkPayoffSignature(json_encode($data, JSON_THROW_ON_ERROR), $signature);
+        $this->assertTrue($isTrue);
+    }
+
+    /**
+     * @throws JsonException
+     */
+    private function generateSign(array $response, string $secret): string
+    {
+        ksort($response);
+
+        return hash_hmac("sha256", json_encode($response, JSON_THROW_ON_ERROR), $secret);
     }
 
 }

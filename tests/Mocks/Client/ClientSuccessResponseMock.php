@@ -207,4 +207,139 @@ class ClientSuccessResponseMock implements ClientContract
     {
         return [];
     }
+
+    public function getAvailibleTariffs(array $data): array
+    {
+        return [
+            'data' => [
+                'percent' => 10,
+                'user_percent' => 5,
+                'shop_percent' => 5,
+                'service_id' => 1,
+                'service_name' => 'Банковская карта',
+                'status' => 'p2p_card',
+                'currency' => 'RUB',
+                'min_amount' => 10,
+                'max_amount' => 100000,
+                'fix_commission' => 3,
+                'discount_percent' => 0,
+                'discount_from_amount' => 0,
+            ],
+            'status' => 200,
+            'status_check' => true
+        ];
+    }
+
+    public function getProfileBalance(array $data): array
+    {
+        return [
+            'data' => [
+                'freeze_balance' => 2000,
+                'active_balance' => 8000,
+                'balance' => 10000,
+            ],
+            'status' => 200,
+            'status_check' => true
+        ];
+    }
+
+    public function getPayoffCourseList(array $data): array
+    {
+        return [
+            'data' => [
+                [
+                    'currency' => [
+                        'symbol' => '₽',
+                        'value' => 'RUB',
+                        'label' => 'Российский рубль'
+                    ],
+                    'value' => 1
+                ],
+                [
+                    'currency' => [
+                        'symbol' => '₽',
+                        'value' => 'RUB',
+                        'label' => 'Российский рубль'
+                    ],
+                    'value' => 1
+                ],
+                [
+                    'currency' => [
+                        'symbol' => 'USDT',
+                        'value' => 'USDT',
+                        'label' => 'Tether USD'
+                    ],
+                    'value' => rand(90, 120)
+                ],
+                [
+                    'currency' => [
+                        'symbol' => 'BTC',
+                        'value' => 'BTC',
+                        'label' => 'Bitcoin'
+                    ],
+                    'value' => rand(40_000, 120_000)
+                ],
+                [
+                    'currency' => [
+                        'symbol' => 'ETH',
+                        'value' => 'ETH',
+                        'label' => 'Etherium'
+                    ],
+                    'value' => rand(1_000, 5_000)
+                ]
+            ],
+            'status' => 200,
+            'status_check' => true
+        ];
+    }
+
+    public function getPaymentCourseList(array $data): array
+    {
+        return [
+            'data' => [
+                [
+                    'currency' => [
+                        'symbol' => '₽',
+                        'value' => 'RUB',
+                        'label' => 'Российский рубль'
+                    ],
+                    'value' => 1
+                ],
+                [
+                    'currency' => [
+                        'symbol' => '₽',
+                        'value' => 'RUB',
+                        'label' => 'Российский рубль'
+                    ],
+                    'value' => 1
+                ],
+                [
+                    'currency' => [
+                        'symbol' => 'USDT',
+                        'value' => 'USDT',
+                        'label' => 'Tether USD'
+                    ],
+                    'value' => rand(90, 120)
+                ],
+                [
+                    'currency' => [
+                        'symbol' => 'BTC',
+                        'value' => 'BTC',
+                        'label' => 'Bitcoin'
+                    ],
+                    'value' => rand(40_000, 120_000)
+                ],
+                [
+                    'currency' => [
+                        'symbol' => 'ETH',
+                        'value' => 'ETH',
+                        'label' => 'Etherium'
+                    ],
+                    'value' => rand(1_000, 5_000)
+                ]
+            ],
+            'status' => 200,
+            'status_check' => true
+        ];
+    }
 }

@@ -2,10 +2,13 @@
 
 namespace Test\Lava\Api\Mocks\Client;
 
+use JsonException;
 use Lava\Api\Contracts\Client\ClientContract;
+use Lava\Api\Exceptions\Course\CourseException;
 use Lava\Api\Exceptions\Invoice\InvoiceException;
 use Lava\Api\Exceptions\Payoff\CheckWalletException;
 use Lava\Api\Exceptions\Payoff\PayoffException;
+use Lava\Api\Exceptions\Profile\ProfileException;
 use Lava\Api\Exceptions\Refund\RefundException;
 use Lava\Api\Exceptions\Shop\ShopException;
 
@@ -228,5 +231,77 @@ class ClientErrorResponseMock implements ClientContract
     public function getPayoffTariffs(array $data): array
     {
         return [];
+    }
+
+    /**
+     * @throws PayoffException
+     * @throws JsonException
+     */
+    public function getAvailibleTariffs(array $data): array
+    {
+        $response = [
+            'data' => null,
+            'error' => 'Profile not found',
+            'status' => 404,
+            'status_check' => false
+        ];
+
+        if (!empty($response['error']) || $response['status'] !== 200) {
+            throw new PayoffException(is_array($response['error']) ? json_encode($response['error'], JSON_THROW_ON_ERROR) : $response['error'], $response['status']);
+        }
+
+        return $response;
+    }
+
+    /**
+     * @throws ProfileException
+     * @throws JsonException
+     */
+    public function getProfileBalance(array $data): array
+    {
+        $response = [
+            'data' => null,
+            'error' => 'Profile not found',
+            'status' => 404,
+            'status_check' => false
+        ];
+
+        if (!empty($response['error']) || $response['status'] !== 200) {
+            throw new ProfileException(is_array($response['error']) ? json_encode($response['error'], JSON_THROW_ON_ERROR) : $response['error'], $response['status']);
+        }
+
+        return $response;
+    }
+
+    public function getPayoffCourseList(array $data): array
+    {
+        $response = [
+            'data' => null,
+            'error' => 'Unauthorized',
+            'status' => 401,
+            'status_check' => false
+        ];
+
+        if (!empty($response['error']) || $response['status'] !== 200) {
+            throw new CourseException(is_array($response['error']) ? json_encode($response['error']) : $response['error'], $response['status']);
+        }
+
+        return $response;
+    }
+
+    public function getPaymentCourseList(array $data): array
+    {
+        $response = [
+            'data' => null,
+            'error' => 'Unauthorized',
+            'status' => 401,
+            'status_check' => false
+        ];
+
+        if (!empty($response['error']) || $response['status'] !== 200) {
+            throw new CourseException(is_array($response['error']) ? json_encode($response['error']) : $response['error'], $response['status']);
+        }
+
+        return $response;
     }
 }

@@ -10,6 +10,7 @@ use Lava\Api\Dto\Request\Payoff\GetPayoffStatusDto;
 use Lava\Api\Dto\Response\Payoff\CheckWalletResponseDto;
 use Lava\Api\Dto\Response\Payoff\CreatedPayoffDto;
 use Lava\Api\Dto\Response\Payoff\StatusPayoffDto;
+use Lava\Api\Dto\Secret\ProfileSecretDto;
 use Lava\Api\Exceptions\BaseException;
 use Lava\Api\Exceptions\Payoff\CheckWalletException;
 use Lava\Api\Exceptions\Payoff\PayoffException;
@@ -35,10 +36,16 @@ class PayoffTest extends TestCase
         $secretKey = uniqid('', true);
         $orderId = uniqid('', true);
 
+        $profileSecretData = new ProfileSecretDto(
+            uniqid('', true),
+            uniqid('', true),
+            uniqid('', true),
+        );
+
         $payoffCreate = new CreatePayoffDto($orderId, 10, 'lava_payoff');
 
         $mockClient = new ClientSuccessResponseMock();
-        $facade = new LavaFacade($secretKey, $shopId, null, $mockClient);
+        $facade = new LavaFacade($secretKey, $shopId, null, $mockClient, null, null, $profileSecretData);
         $response = $facade->createPayoff($payoffCreate);
 
         $this->assertEquals(CreatedPayoffDto::class, get_class($response));
@@ -56,10 +63,16 @@ class PayoffTest extends TestCase
         $secretKey = uniqid('', true);
         $payoffId = uniqid('', true);
 
+        $profileSecretData = new ProfileSecretDto(
+            uniqid('', true),
+            uniqid('', true),
+            uniqid('', true),
+        );
+
         $payoffStatus = new GetPayoffStatusDto(null, $payoffId);
 
         $mockClient = new ClientSuccessResponseMock();
-        $facade = new LavaFacade($secretKey, $shopId, null, $mockClient);
+        $facade = new LavaFacade($secretKey, $shopId, null, $mockClient, null, null, $profileSecretData);
         $response = $facade->getStatusPayoff($payoffStatus);
 
         $this->assertEquals(StatusPayoffDto::class, get_class($response));
@@ -74,10 +87,16 @@ class PayoffTest extends TestCase
         $secretKey = uniqid('', true);
         $orderId = uniqid('', true);
 
+        $profileSecretData = new ProfileSecretDto(
+            uniqid('', true),
+            uniqid('', true),
+            uniqid('', true),
+        );
+
         $payoffCreate = new CreatePayoffDto($orderId, 10, 'lava_payoff');
 
         $mockClient = new ClientErrorResponseMock();
-        $facade = new LavaFacade($secretKey, $shopId, null, $mockClient);
+        $facade = new LavaFacade($secretKey, $shopId, null, $mockClient, null, null, $profileSecretData);
         try {
             $response = $facade->createPayoff($payoffCreate);
         } catch (Exception $e) {
@@ -95,11 +114,16 @@ class PayoffTest extends TestCase
         $shopId = uniqid('', true);
         $secretKey = uniqid('', true);
         $payoffId = uniqid('', true);
+        $profileSecretData = new ProfileSecretDto(
+            uniqid('', true),
+            uniqid('', true),
+            uniqid('', true),
+        );
 
         $payoffStatus = new GetPayoffStatusDto(null, $payoffId);
 
         $mockClient = new ClientErrorResponseMock();
-        $facade = new LavaFacade($secretKey, $shopId, null, $mockClient);
+        $facade = new LavaFacade($secretKey, $shopId, null, $mockClient, null, null, $profileSecretData);
         try {
             $response = $facade->getStatusPayoff($payoffStatus);
         } catch (Exception $e) {
@@ -115,11 +139,16 @@ class PayoffTest extends TestCase
         $shopId = uniqid('', true);
         $secretKey = uniqid('', true);
         $walletTo = uniqid('', true);
+        $profileSecretData = new ProfileSecretDto(
+            uniqid('', true),
+            uniqid('', true),
+            uniqid('', true),
+        );
 
         $checkWallet = new CheckWalletRequestDto('steam_payoff', $walletTo);
 
         $mockClient = new ClientErrorResponseMock();
-        $facade = new LavaFacade($secretKey, $shopId, null, $mockClient);
+        $facade = new LavaFacade($secretKey, $shopId, null, $mockClient, null, null, $profileSecretData);
 
         try {
             $response = $facade->checkWallet($checkWallet);
@@ -142,11 +171,16 @@ class PayoffTest extends TestCase
         $shopId = uniqid('', true);
         $secretKey = uniqid('', true);
         $walletTo = uniqid('', true);
+        $profileSecretData = new ProfileSecretDto(
+            uniqid('', true),
+            uniqid('', true),
+            uniqid('', true),
+        );
 
         $checkWallet = new CheckWalletRequestDto('steam_payoff', $walletTo);
 
         $mockClient = new ClientSuccessResponseMock();
-        $facade = new LavaFacade($secretKey, $shopId, null, $mockClient);
+        $facade = new LavaFacade($secretKey, $shopId, null, $mockClient, null, null, $profileSecretData);
         $response = $facade->checkWallet($checkWallet);
 
         $this->assertEquals(CheckWalletResponseDto::class, get_class($response));

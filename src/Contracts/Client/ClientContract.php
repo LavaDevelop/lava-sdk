@@ -2,7 +2,11 @@
 
 namespace Lava\Api\Contracts\Client;
 
-interface ClientContract {
+use JsonException;
+use Lava\Api\Exceptions\BaseException;
+
+interface ClientContract
+{
 
     /**
      * @param array $data
@@ -81,6 +85,25 @@ interface ClientContract {
      */
     public function getPayoffTariffs(array $data): array;
 
-
     public function getAvailibleTariffs(array $data): array;
+
+    /**
+     * @param array $data
+     * @return array
+     * @throws BaseException
+     * @throws JsonException
+     */
+    public function getProfileBalance(array $data): array;
+
+    /**
+     * @throws JsonException
+     * @throws BaseException
+     */
+    public function getPaymentCourseList(array $data): array;
+
+    /**
+     * @throws JsonException
+     * @throws BaseException
+     */
+    public function getPayoffCourseList(array $data): array;
 }

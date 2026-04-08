@@ -1,15 +1,19 @@
 {
   "name": "lava-payment/lava",
   "type": "library",
-  "description": "Lava payment sdk",
-  "minimum-stability": "",
+  "description": "Lava Payment SDK",
+  "minimum-stability": "stable",
+  "config": {
+    "sort-packages": true,
+    "optimize-autoloader": true
+  },
+  "prefer-stable": true,
   "keywords": [
     "lava",
     "lava-sdk",
     "lava payment"
   ],
   "license": "MIT",
-  "version": "1.0.3",
   "autoload": {
     "psr-4": {
       "Lava\\Api\\": "src/"
@@ -21,7 +25,7 @@
     }
   },
   "require": {
-    "php": ">= 7.4",
+    "php": ">= 7.4  || >=8.0",
     "ext-json": "*"
   },
   "require-dev": {

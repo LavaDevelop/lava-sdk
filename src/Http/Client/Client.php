@@ -3,22 +3,26 @@
 namespace Lava\Api\Http\Client;
 
 use JsonException;
+use Lava\Api\Constants\CourseUrlConstants;
 use Lava\Api\Constants\H2hUrlConstants;
 use Lava\Api\Constants\InvoiceUrlConstants;
 use Lava\Api\Constants\Payoff\CheckWalletPayoffService;
 use Lava\Api\Constants\Payoff\PayoffServiceContract;
 use Lava\Api\Constants\PayoffUrlConstants;
+use Lava\Api\Constants\ProfileUrlConstants;
 use Lava\Api\Constants\RefundUrlConstants;
 use Lava\Api\Constants\ShopUrlConstants;
 use Lava\Api\Contracts\Client\ClientContract;
 use Lava\Api\Contracts\Client\HttpClientContract;
 use Lava\Api\Exceptions\BaseException;
+use Lava\Api\Exceptions\Course\CourseException;
 use Lava\Api\Exceptions\H2h\H2hException;
 use Lava\Api\Exceptions\Invoice\InvoiceException;
 use Lava\Api\Exceptions\Payoff\CheckWalletException;
 use Lava\Api\Exceptions\Payoff\ErrorGetPayoffTariffException;
 use Lava\Api\Exceptions\Payoff\PayoffException;
 use Lava\Api\Exceptions\Payoff\PayoffServiceException;
+use Lava\Api\Exceptions\Profile\ProfileException;
 use Lava\Api\Exceptions\Refund\RefundException;
 use Lava\Api\Exceptions\Shop\ShopException;
 
@@ -284,4 +288,50 @@ class Client implements ClientContract
         return $response;
     }
 
+    /**
+     * @param array $data
+     * @return array
+     * @throws BaseException
+     * @throws JsonException
+     */
+    public function getProfileBalance(array $data): array
+    {
+        $response = $this->httpClient->getRequest(ProfileUrlConstants::GET_BALANCE, $data);
+
+        if (!empty($response['error']) || $response['status'] !== 200) {
+            throw new ProfileException(is_array($response['error']) ? json_encode($response['error'], JSON_THROW_ON_ERROR) : $response['error'], $response['status']);
+        }
+
+        return $response;
+    }
+
+    /**
+     * @throws JsonException
+     * @throws BaseException
+     */
+    public function getPaymentCourseList(array $data): array
+    {
+        $response = $this->httpClient->getRequest(CourseUrlConstants::GET_PAYMENT_COURSE_LIST, $data);
+
+        if (!empty($response['error']) || $response['status'] !== 200) {
+            throw new CourseException(is_array($response['error']) ? json_encode($response['error'], JSON_THROW_ON_ERROR) : $response['error'], $response['status']);
+        }
+
+        return $response;
+    }
+
+    /**
+     * @throws JsonException
+     * @throws BaseException
+     */
+    public function getPayoffCourseList(array $data): array
+    {
+        $response = $this->httpClient->getRequest(CourseUrlConstants::GET_PAYOFF_COURSE_LIST, $data);
+
+        if (!empty($response['error']) || $response['status'] !== 200) {
+            throw new CourseException(is_array($response['error']) ? json_encode($response['error'], JSON_THROW_ON_ERROR) : $response['error'], $response['status']);
+        }
+
+        return $response;
+    }
 }

@@ -13,13 +13,13 @@ class CreatePayoff implements CreatePayoffContract
 
     /**
      * @param CreatePayoffDto $payoffDto
-     * @param string $shopId
+     * @param string $profileId
      * @return array
      */
-    public function toArray(CreatePayoffDto $payoffDto, string $shopId): array
+    public function toArray(CreatePayoffDto $payoffDto, string $profileId): array
     {
         return [
-            'shopId' => $shopId,
+            'profileId' => $profileId,
             'amount' => $payoffDto->getAmount(),
             'service' => $payoffDto->getService(),
             'walletTo' => $payoffDto->getWalletTo(),
