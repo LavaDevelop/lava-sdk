@@ -11,10 +11,11 @@ interface CheckWalletContract
 
     /**
      * @param CheckWalletRequestDto $payoffDto
-     * @param string $shopId
+     * @param string $profileId
+     *
      * @return array
      */
-    public function toArray(CheckWalletRequestDto $payoffDto, string $shopId): array;
+    public function toArray(CheckWalletRequestDto $payoffDto, string $profileId): array;
 
     /**
      * @param array $response

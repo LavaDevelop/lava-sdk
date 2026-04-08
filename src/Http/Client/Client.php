@@ -153,10 +153,6 @@ class Client implements ClientContract
      */
     public function createPayoff(array $data): array
     {
-        if (!in_array($data['service'], PayoffServiceContract::PAYOFF_SERVICE, true)) {
-            throw new PayoffServiceException('Service not equal ' . json_encode(PayoffServiceContract::PAYOFF_SERVICE, JSON_THROW_ON_ERROR));
-        }
-
         $request = json_encode($data, JSON_THROW_ON_ERROR);
         $response = $this->httpClient->postRequest(PayoffUrlConstants::CREATE_PAYOFF, $request);
 
@@ -238,10 +234,6 @@ class Client implements ClientContract
      */
     public function checkWallet(array $data): array
     {
-        if (!in_array($data['service'], CheckWalletPayoffService::PAYOFF_SERVICE, true)) {
-            throw new PayoffServiceException('Service not equal ' . json_encode(PayoffServiceContract::PAYOFF_SERVICE, JSON_THROW_ON_ERROR));
-        }
-
         $request = json_encode($data, JSON_THROW_ON_ERROR);
         $response = $this->httpClient->postRequest(PayoffUrlConstants::CHECK_USER_WALLET, $request, 35);
 
