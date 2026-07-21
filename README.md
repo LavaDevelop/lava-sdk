@@ -26,7 +26,8 @@ $facade = new LavaFacade(
 
 ### Инициализация для profile/payoff методов
 
-Для методов профиля и вывода (`createPayoff`, `getStatusPayoff`, `getPayoffTariffs`, `checkWallet`, `getProfileBalance`, `checkPayoffSignature`) нужно передать `ProfileSecretDto`.
+Для методов профиля и вывода (`createPayoff`, `getStatusPayoff`, `getPayoffTariffs`, `checkWallet`, `getProfileBalance`,
+`checkPayoffSignature`) нужно передать `ProfileSecretDto`.
 
 ```php
 use Lava\Api\Dto\Secret\ProfileSecretDto;
@@ -188,6 +189,115 @@ $response = $facade->checkWallet($dto);
 
 Возвращает `CheckWalletResponseDto`.
 
+### Рекуррентные платежи
+
+Рекуррентные методы используют те же `shop_secret_key` и `shop_id`, что и методы инвойсов. Подпись запроса и `shopId`
+формируются SDK автоматически.
+
+#### Список продуктов подписки `getRecurrentProducts`
+
+```php
+$products = $facade->getRecurrentProducts();
+
+foreach ($products as $product) {
+    echo $product->getName();
+    echo $product->getPrice();
+}
+```
+
+Возвращает массив объектов `ProductDto`. У объекта доступны, в частности, методы `getId()`, `getName()`, `getPrice()`,
+`getPeriod()`, `getPeriodDays()`, `getFreeDays()`, `getDescription()`, `isActive()` и `getSubscribersCount()`.
+
+#### Создание подписчика `createRecurrentConsumer`
+
+```php
+use Lava\Api\Dto\Request\Recurrent\CreateConsumerDto;
+
+$consumer = new CreateConsumerDto(
+    'customer@example.com',
+    'customer-1001',
+    '+79990000000', // optional
+    'Иван Иванов' // optional
+);
+
+$response = $facade->createRecurrentConsumer($consumer);
+```
+
+Возвращает `ConsumerDto` с методами `getConsumerId()`, `getEmail()`, `getPhone()` и `getShopId()`.
+
+#### Оформление подписки `createSubscription`
+
+Сначала создайте подписчика, затем передайте его `consumerId` и идентификатор продукта из `getRecurrentProducts()`.
+
+```php
+use Lava\Api\Dto\Request\Recurrent\CreateSubscriptionDto;
+
+$subscription = new CreateSubscriptionDto(
+    'product-uuid',
+    'customer-1001',
+    'subscription-order-1001'
+);
+
+$response = $facade->createSubscription($subscription);
+$paymentUrl = $response->getUrl();
+```
+
+Возвращает `CreatedSubscriptionDto`. Методы `getSubscriptionId()`, `getAmount()`, `getExpired()`, `getUrl()` и
+`getComment()` содержат данные созданной подписки и ссылку на первоначальную оплату.
+
+#### Статус подписки `getSubscriptionStatus`
+
+Идентифицируйте подписку по `subscriptionId` или по вашему `orderId`.
+
+```php
+use Lava\Api\Dto\Request\Recurrent\GetSubscriptionStatusDto;
+
+$status = $facade->getSubscriptionStatus(
+    new GetSubscriptionStatusDto('subscription-uuid')
+);
+
+// Или поиск по ID заказа в вашей системе:
+$status = $facade->getSubscriptionStatus(
+    new GetSubscriptionStatusDto(null, 'subscription-order-1001')
+);
+```
+
+Возвращает `SubscriptionStatusDto`. Основные методы: `getStatus()`, `getSubscriptionId()`, `getOrderId()`,
+`getConsumerId()`, `getProductId()`, `getAmount()`, `getLastPayTime()`, `getNextPayTime()` и `getDeactivatedReason()`.
+
+#### Перенос следующего платежа `offsetSubscriptionNextPayTime`
+
+```php
+use Lava\Api\Dto\Request\Recurrent\OffsetNextPayTimeDto;
+
+$response = $facade->offsetSubscriptionNextPayTime(
+    new OffsetNextPayTimeDto(7, 'subscription-uuid')
+);
+
+$nextPayTime = $response->getNextPayTime();
+```
+
+Первый аргумент — число дней переноса. Подписку можно указать также через `orderId`:
+`new OffsetNextPayTimeDto(7, null, 'subscription-order-1001')`. Метод возвращает `OffsetNextPayTimeResponseDto`.
+
+#### Отмена подписки `unsubscribe`
+
+```php
+use Lava\Api\Dto\Request\Recurrent\UnsubscribeDto;
+
+$response = $facade->unsubscribe(
+    new UnsubscribeDto(null, 'subscription-order-1001')
+);
+
+if ($response->isUnsubscribed()) {
+    // Подписка отменена
+}
+```
+
+Возвращает `UnsubscribedSubscriptionDto`. Для `getSubscriptionStatus`, `offsetSubscriptionNextPayTime` и `unsubscribe`
+обязателен хотя бы один идентификатор: `subscriptionId` или `orderId`; иначе выбрасывается `RecurrentException` с кодом
+`422`.
+
 ### Вебхуки и подписи
 
 #### Проверка подписи shop webhook `checkSignWebhook`
@@ -202,6 +312,9 @@ if (!isset($headers['Authorization'])) {
 
 $isValid = $facade->checkSignWebhook($data, $headers['Authorization']);
 ```
+
+Этот метод используется и для webhook-уведомлений о рекуррентных подписках. В payload рекуррентного webhook поле `type`
+имеет значение `4`; статус подписки передаётся в поле `status` (`activated`, `deactivated` или `suspended`).
 
 #### Проверка подписи payoff webhook `checkPayoffSignature`
 
@@ -218,5 +331,6 @@ $isValid = $facade->checkPayoffSignature($data, $headers['Authorization']);
 
 ## Исключения
 
-При ошибках API методы выбрасывают исключения (например, `InvoiceException`, `PayoffException`, `RefundException`, `BaseException` и другие). Рекомендуется оборачивать вызовы фасада в `try/catch` и логировать сообщение и код ошибки.
-
+При ошибках API методы выбрасывают исключения (например, `InvoiceException`, `PayoffException`, `RefundException`,
+`RecurrentException`, `BaseException` и другие). Рекомендуется оборачивать вызовы фасада в `try/catch` и логировать
+сообщение и код ошибки.

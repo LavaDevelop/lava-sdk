@@ -62,20 +62,6 @@ interface ClientContract
      *
      * @return array
      */
-    public function createH2hInvoice(array $data): array;
-
-    /**
-     * @param array $data
-     *
-     * @return array
-     */
-    public function createH2hSbp(array $data): array;
-
-    /**
-     * @param array $data
-     *
-     * @return array
-     */
     public function checkWallet(array $data): array;
 
     /**
@@ -106,4 +92,16 @@ interface ClientContract
      * @throws BaseException
      */
     public function getPayoffCourseList(array $data): array;
+
+    public function getRecurrentProducts(array $data): array;
+
+    public function createRecurrentConsumer(array $data): array;
+
+    public function createSubscription(array $data): array;
+
+    public function getSubscriptionStatus(array $data): array;
+
+    public function offsetSubscriptionNextPayTime(array $data): array;
+
+    public function unsubscribe(array $data): array;
 }

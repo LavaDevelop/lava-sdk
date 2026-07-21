@@ -9,8 +9,6 @@ use Lava\Api\Contracts\Client\ClientCheckSignatureWebhookContract;
 use Lava\Api\Contracts\Client\ClientContract;
 use Lava\Api\Contracts\Client\ClientGenerateSignatureContract;
 use Lava\Api\Contracts\LavaFacadeContract;
-use Lava\Api\Dto\Request\H2h\CreateH2hInvoiceDto;
-use Lava\Api\Dto\Request\H2h\CreateSBPH2HDto;
 use Lava\Api\Dto\Request\Invoice\CreateInvoiceDto;
 use Lava\Api\Dto\Request\Invoice\GetStatusInvoiceDto;
 use Lava\Api\Dto\Request\Payoff\CheckWalletRequestDto;
@@ -18,10 +16,13 @@ use Lava\Api\Dto\Request\Payoff\CreatePayoffDto;
 use Lava\Api\Dto\Request\Payoff\GetPayoffStatusDto;
 use Lava\Api\Dto\Request\Refund\CreateRefundDto;
 use Lava\Api\Dto\Request\Refund\GetStatusRefundDto;
+use Lava\Api\Dto\Request\Recurrent\CreateConsumerDto;
+use Lava\Api\Dto\Request\Recurrent\CreateSubscriptionDto;
+use Lava\Api\Dto\Request\Recurrent\GetSubscriptionStatusDto;
+use Lava\Api\Dto\Request\Recurrent\OffsetNextPayTimeDto;
+use Lava\Api\Dto\Request\Recurrent\UnsubscribeDto;
 use Lava\Api\Dto\Response\Course\CourseDto;
 use Lava\Api\Dto\Response\Course\CurrencyDto;
-use Lava\Api\Dto\Response\H2h\CreatedH2hInvoiceDto;
-use Lava\Api\Dto\Response\H2h\CreatedSBPH2hDto;
 use Lava\Api\Dto\Response\Invoice\CreatedInvoiceDto;
 use Lava\Api\Dto\Response\Invoice\StatusInvoiceDto;
 use Lava\Api\Dto\Response\Payoff\CheckWalletResponseDto;
@@ -31,10 +32,14 @@ use Lava\Api\Dto\Response\Profile\ProfileBalanceDto;
 use Lava\Api\Dto\Response\Refund\CreatedRefundDto;
 use Lava\Api\Dto\Response\Refund\StatusRefundDto;
 use Lava\Api\Dto\Response\Shop\ShopBalanceDto;
+use Lava\Api\Dto\Response\Recurrent\ConsumerDto;
+use Lava\Api\Dto\Response\Recurrent\CreatedSubscriptionDto;
+use Lava\Api\Dto\Response\Recurrent\OffsetNextPayTimeResponseDto;
+use Lava\Api\Dto\Response\Recurrent\SubscriptionStatusDto;
+use Lava\Api\Dto\Response\Recurrent\UnsubscribedSubscriptionDto;
 use Lava\Api\Dto\Secret\ProfileSecretDto;
 use Lava\Api\Exceptions\BaseException;
 use Lava\Api\Exceptions\Course\CourseException;
-use Lava\Api\Exceptions\H2h\H2hException;
 use Lava\Api\Exceptions\Invoice\InvoiceException;
 use Lava\Api\Exceptions\Payoff\CheckWalletException;
 use Lava\Api\Exceptions\Payoff\ErrorGetPayoffTariffException;
@@ -44,8 +49,6 @@ use Lava\Api\Exceptions\Shop\ShopException;
 use Lava\Api\Http\Client\Client;
 use Lava\Api\Http\Client\ClientCheckSignatureWebhook;
 use Lava\Api\Http\Client\ClientGenerateSignature;
-use Lava\Api\Http\H2h\CreateH2hInvoice;
-use Lava\Api\Http\H2h\CreateH2HSbp;
 use Lava\Api\Http\Invoices\CreateInvoice;
 use Lava\Api\Http\Invoices\GetAvailibleTariffsDto;
 use Lava\Api\Http\Invoices\GetStatusInvoice;
@@ -56,6 +59,7 @@ use Lava\Api\Http\Payoffs\TariffDto;
 use Lava\Api\Http\Profile\GetProfileBalance;
 use Lava\Api\Http\Refund\CreateRefund;
 use Lava\Api\Http\Refund\GetRefundStatus;
+use Lava\Api\Http\Recurrent\Recurrent;
 use Lava\Api\Http\Shop\GetShopBalance;
 use LogicException;
 
@@ -220,43 +224,6 @@ class LavaFacade implements LavaFacadeContract
     }
 
     /**
-     * @param CreateH2hInvoiceDto $h2HInvoiceDto
-     *
-     * @return CreatedH2hInvoiceDto
-     * @throws BaseException
-     * @throws JsonException
-     * @throws H2hException
-     */
-    public function createH2hInvoice(CreateH2hInvoiceDto $h2HInvoiceDto): CreatedH2hInvoiceDto
-    {
-
-        $getStatus = new CreateH2hInvoice();
-        $requestData = $getStatus->toArray($h2HInvoiceDto, $this->shopId);
-        $this->clearData($requestData);
-        $requestData['signature'] = $this->clientGenerateSign->generateSignature($requestData);
-        $response = $this->client->createH2hInvoice($requestData);
-        return $getStatus->toDto($response);
-    }
-
-    /**
-     * @param CreateSBPH2HDto $h2HInvoiceDto
-     *
-     * @return CreatedSBPH2hDto
-     * @throws BaseException
-     * @throws H2hException
-     * @throws JsonException
-     */
-    public function createH2HSpbInvoice(CreateSBPH2HDto $h2HInvoiceDto): CreatedSBPH2hDto
-    {
-        $getStatus = new CreateH2HSbp();
-        $requestData = $getStatus->toArray($h2HInvoiceDto, $this->shopId);
-        $this->clearData($requestData);
-        $requestData['signature'] = $this->clientGenerateSign->generateSignature($requestData);
-        $response = $this->client->createH2hSbp($requestData);
-        return $getStatus->toDto($response);
-    }
-
-    /**
      * @param CreatePayoffDto $payoff
      *
      * @return CreatedPayoffDto
@@ -336,6 +303,89 @@ class LavaFacade implements LavaFacadeContract
         $this->setSignature($requestData, $this->profileSecretData->getSecretKey());
         $response = $this->client->checkWallet($requestData);
         return $walletStatus->toDto($response);
+    }
+
+    /**
+     * @return array
+     * @throws BaseException
+     * @throws JsonException
+     */
+    public function getRecurrentProducts(): array
+    {
+        $recurrent = new Recurrent();
+        $requestData = ['shopId' => $this->shopId];
+        $requestData['signature'] = $this->clientGenerateSign->generateSignature($requestData);
+
+        return $recurrent->productListToDto($this->client->getRecurrentProducts($requestData));
+    }
+
+    /**
+     * @throws BaseException
+     * @throws JsonException
+     */
+    public function createRecurrentConsumer(CreateConsumerDto $consumer): ConsumerDto
+    {
+        $recurrent = new Recurrent();
+        $requestData = $recurrent->consumerToArray($consumer, $this->shopId);
+        $this->clearData($requestData);
+        $requestData['signature'] = $this->clientGenerateSign->generateSignature($requestData);
+
+        return $recurrent->consumerToDto($this->client->createRecurrentConsumer($requestData));
+    }
+
+    /**
+     * @throws BaseException
+     * @throws JsonException
+     */
+    public function createSubscription(CreateSubscriptionDto $subscription): CreatedSubscriptionDto
+    {
+        $recurrent = new Recurrent();
+        $requestData = $recurrent->subscriptionToArray($subscription, $this->shopId);
+        $requestData['signature'] = $this->clientGenerateSign->generateSignature($requestData);
+
+        return $recurrent->subscriptionToDto($this->client->createSubscription($requestData));
+    }
+
+    /**
+     * @throws BaseException
+     * @throws JsonException
+     */
+    public function getSubscriptionStatus(GetSubscriptionStatusDto $subscription): SubscriptionStatusDto
+    {
+        $recurrent = new Recurrent();
+        $requestData = $recurrent->statusToArray($subscription, $this->shopId);
+        $this->clearData($requestData);
+        $requestData['signature'] = $this->clientGenerateSign->generateSignature($requestData);
+
+        return $recurrent->statusToDto($this->client->getSubscriptionStatus($requestData));
+    }
+
+    /**
+     * @throws BaseException
+     * @throws JsonException
+     */
+    public function offsetSubscriptionNextPayTime(OffsetNextPayTimeDto $offset): OffsetNextPayTimeResponseDto
+    {
+        $recurrent = new Recurrent();
+        $requestData = $recurrent->offsetToArray($offset, $this->shopId);
+        $this->clearData($requestData);
+        $requestData['signature'] = $this->clientGenerateSign->generateSignature($requestData);
+
+        return $recurrent->offsetToDto($this->client->offsetSubscriptionNextPayTime($requestData));
+    }
+
+    /**
+     * @throws BaseException
+     * @throws JsonException
+     */
+    public function unsubscribe(UnsubscribeDto $subscription): UnsubscribedSubscriptionDto
+    {
+        $recurrent = new Recurrent();
+        $requestData = $recurrent->unsubscribeToArray($subscription, $this->shopId);
+        $this->clearData($requestData);
+        $requestData['signature'] = $this->clientGenerateSign->generateSignature($requestData);
+
+        return $recurrent->unsubscribeToDto($this->client->unsubscribe($requestData));
     }
 
     /**

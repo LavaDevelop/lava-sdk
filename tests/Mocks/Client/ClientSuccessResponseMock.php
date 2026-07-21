@@ -154,44 +154,6 @@ class ClientSuccessResponseMock implements ClientContract
      * @param array $data
      * @return array
      */
-    public function createH2hInvoice(array $data): array
-    {
-        return [
-            'data' => [
-                'url' => 'https://lava.ru/tds?t=f109ddc5-e65c-a3b4-6f7a-579ee7f8b452',
-                'invoiceId' => '681b780b-cb7e-430b-a503-b7aefb834399',
-                'cardMask' => '553691******8079',
-                'amount' => 100,
-                'amountPay' => 100,
-                'commission' => 5,
-                'shopId' => uniqid('', true)
-            ],
-            'status' => 200,
-            'status_check' => true
-        ];
-    }
-
-    /**
-     * @param array $data
-     * @return array
-     */
-    public function createH2hSbp(array $data): array
-    {
-        return [
-            'data' => [
-                'sbp_url' => 'https://pay.lava.ru/sbp/f78ea11f-cd8a-4752-b8b1-36bc312ff886',
-                'fingerprint' => false,
-                'qr_code' => 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAM0AAADNCAIAAACU3mM+AAAABnRSTlMA/wD/AP83WBt9AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAEpElEQVR4nO3dy47jNhRF0VSQ///lzlwDBgQvt+XKWtO2Kbnr4IKU+Pj58+fPX3DZ35++Af4X5IyCnFGQMwpyRkHOKMgZBTmjIGcU5IyCnFGQMwpyRkHOKMgZBTmjIGcU5IyCnFH45+TLPz8/U/ex9ljE8LjuyRKHdVNbF8ruav3he05+kXpGQc4oyBkFOaNwNA54GFxyPNi3XTe1vueTDvjgGGKrqXf+FdQzCnJGQc4oyBmFyXHAw1Yv8t7T83WfeqvltZNBQ/bCY+3e5lHqGQU5oyBnFOSMwsVxwKcMdqKzuT3r6w7+ok9RzyjIGQU5oyBnFL5yHHDyiH9t8Kn94FKDX0A9oyBnFOSMgpxRuDgOuPfY+qSbPDi5/t5wZPC/7iUvD9QzCnJGQc4oyBmFyXHAp55ib/XHT1bknqzXvXdX66ZeQj2jIGcU5IyCnFH4ecnz4kGDc3tOFtm+c0fST1HPKMgZBTmjIGcULp4fMPjYenCt7zsfl69t/fzBkc3JbTyoZxTkjIKcUZAzCpPvA+49ts5aXrt3BsBg9/ydbxrUMwpyRkHOKMgZhcn3Afcm1WzdxrrlrX99tLy1QdDaS7b1f7g3LFDPKMgZBTmjIGcUvvJ9wFp2cu/g8t13fneQekZBzijIGQU5ozC5X1DW8X/JfPn1hR4+dd3BpqwP4O3kjIKcUZAzCt/xPmDrQtkenNlw5N4PzKhnFOSMgpxRkDMKR+OAe/3xb9wx/yU3+ZINgh7UMwpyRkHOKMgZhYvnCa9lj+nvPT1fryLeMrim4Z0rkNUzCnJGQc4oyBmFt5wnvNU9H5xUkxnsvJ9caHAu0xb1jIKcUZAzCnJG4WPrAwb7pw/39u/c8ql1Ce9cPaCeUZAzCnJGQc4odOcHbO22v9VdHTxteH0bJ+7d5Nrg+uQT6hkFOaMgZxTkjMLFeUGDx4rdu43s1N97Lx7eeYDwg3pGQc4oyBkFOaNw8fyAe6dfbcnODzi57qf2WL333Qf1jIKcUZAzCnJGodsvKHtOfe8Q4MG3FFsf3poWNTj+MC+ILyNnFOSMgpxROBoHDPYTPzV75yVnD2w5GZ1YH8BvJmcU5IyCnFGY3C/oP670oWfrD9mCgHs97neeGLymnlGQMwpyRkHOKEzuF/QwuAJgcPrKyXVfsphg/d0t2aoF9YyCnFGQMwpyRqF7HzBocAzxkl2MPvVd84L4VeSMgpxRkDMKF98HDDo5e2Cr5ZOm3tnT3/rwvT+oekZBzijIGQU5o3Bx39AT92bC3FuBPLirz5aTdcInTW1RzyjIGQU5oyBnFC7uG5pNuVk39ZLzA7Y+nB2ukFHPKMgZBTmjIGcUuvMDBp08pr93fsC9DZEGf+/WhQapZxTkjIKcUZAzCl85Dthyb4rRQ7YgYN3T/9RrmDX1jIKcUZAzCnJG4eI44F4f86RrP/h6YN3ylsHJS9nEpy3qGQU5oyBnFOSMwuQ44CVdzodPHQ12r+Vs+9LBWUPqGQU5oyBnFOSMwleeH8DXUc8oyBkFOaMgZxTkjIKcUZAzCnJGQc4oyBkFOaMgZxTkjIKcUZAzCnJGQc4oyBkFOaPwLwBAzrdcDGGbAAAAAElFTkSuQmCC'
-            ],
-            'status' => 200,
-            'status_check' => true
-        ];
-    }
-
-    /**
-     * @param array $data
-     * @return array
-     */
     public function checkWallet(array $data): array
     {
         return [
@@ -340,6 +302,96 @@ class ClientSuccessResponseMock implements ClientContract
             ],
             'status' => 200,
             'status_check' => true
+        ];
+    }
+
+    public function getRecurrentProducts(array $data): array
+    {
+        return [
+            'data' => [[
+                'id' => '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+                'name' => 'Product name #1',
+                'price' => 100,
+                'period' => 'one_month',
+                'periodDays' => 30,
+                'freeDays' => 0,
+                'description' => 'Description text',
+                'shopId' => 'shop-id',
+                'isActive' => true,
+                'activeCount' => 1,
+                'inactiveCount' => 0,
+                'subscribersCount' => 1,
+            ]],
+            'status' => 200,
+            'status_check' => true,
+        ];
+    }
+
+    public function createRecurrentConsumer(array $data): array
+    {
+        return [
+            'data' => [
+                'phone' => $data['phone'] ?? null,
+                'email' => $data['email'],
+                'consumerId' => $data['consumerId'],
+                'shopId' => $data['shopId'],
+            ],
+            'status' => 200,
+            'status_check' => true,
+        ];
+    }
+
+    public function createSubscription(array $data): array
+    {
+        return [
+            'data' => [
+                'subscriptionId' => '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+                'amount' => 100,
+                'expired' => '2022-08-19 09:58:44',
+                'url' => 'https://pay.lava.ru/invoice/test',
+                'comment' => 'Оплата подписки',
+            ],
+            'status' => 200,
+            'status_check' => true,
+        ];
+    }
+
+    public function getSubscriptionStatus(array $data): array
+    {
+        return [
+            'data' => [
+                'subscriptionId' => $data['subscriptionId'] ?? '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+                'orderId' => $data['orderId'] ?? 'order-id',
+                'consumerId' => 'consumer-id',
+                'shopId' => $data['shopId'],
+                'productId' => 'product-id',
+                'status' => 'activated',
+                'amount' => 100,
+                'activation_time' => '2023-07-26 11:00:30',
+                'last_pay_time' => '2023-07-27 01:00:30',
+                'next_pay_time' => '2023-09-30 01:00:30',
+                'payer_details' => '220020******4000',
+            ],
+            'status' => 200,
+            'status_check' => true,
+        ];
+    }
+
+    public function offsetSubscriptionNextPayTime(array $data): array
+    {
+        return [
+            'data' => ['next_pay_time' => '2023-09-26 11:00:30'],
+            'status' => 200,
+            'status_check' => true,
+        ];
+    }
+
+    public function unsubscribe(array $data): array
+    {
+        return [
+            'data' => ['unsubscribed' => true],
+            'status' => 200,
+            'status_check' => true,
         ];
     }
 }
