@@ -4,19 +4,18 @@ namespace Lava\Api\Http\Client;
 
 use JsonException;
 use Lava\Api\Constants\CourseUrlConstants;
-use Lava\Api\Constants\H2hUrlConstants;
 use Lava\Api\Constants\InvoiceUrlConstants;
 use Lava\Api\Constants\Payoff\CheckWalletPayoffService;
 use Lava\Api\Constants\Payoff\PayoffServiceContract;
 use Lava\Api\Constants\PayoffUrlConstants;
 use Lava\Api\Constants\ProfileUrlConstants;
 use Lava\Api\Constants\RefundUrlConstants;
+use Lava\Api\Constants\RecurrentUrlConstants;
 use Lava\Api\Constants\ShopUrlConstants;
 use Lava\Api\Contracts\Client\ClientContract;
 use Lava\Api\Contracts\Client\HttpClientContract;
 use Lava\Api\Exceptions\BaseException;
 use Lava\Api\Exceptions\Course\CourseException;
-use Lava\Api\Exceptions\H2h\H2hException;
 use Lava\Api\Exceptions\Invoice\InvoiceException;
 use Lava\Api\Exceptions\Payoff\CheckWalletException;
 use Lava\Api\Exceptions\Payoff\ErrorGetPayoffTariffException;
@@ -24,6 +23,7 @@ use Lava\Api\Exceptions\Payoff\PayoffException;
 use Lava\Api\Exceptions\Payoff\PayoffServiceException;
 use Lava\Api\Exceptions\Profile\ProfileException;
 use Lava\Api\Exceptions\Refund\RefundException;
+use Lava\Api\Exceptions\Recurrent\RecurrentException;
 use Lava\Api\Exceptions\Shop\ShopException;
 
 class Client implements ClientContract
@@ -190,44 +190,6 @@ class Client implements ClientContract
      * @param array $data
      *
      * @return array
-     * @throws H2hException
-     * @throws JsonException|BaseException
-     */
-    public function createH2hInvoice(array $data): array
-    {
-        $request = json_encode($data, JSON_THROW_ON_ERROR);
-        $response = $this->httpClient->postRequest(H2hUrlConstants::INVOICE_CREATE, $request);
-
-        if (!empty($response['error']) || $response['status'] !== 200) {
-            throw new H2hException(is_array($response['error']) ? json_encode($response['error'], JSON_THROW_ON_ERROR) : $response['error'], $response['status']);
-        }
-
-        return $response;
-    }
-
-    /**
-     * @param array $data
-     *
-     * @return array
-     * @throws H2hException
-     * @throws JsonException|BaseException
-     */
-    public function createH2hSbp(array $data): array
-    {
-        $request = json_encode($data, JSON_THROW_ON_ERROR);
-        $response = $this->httpClient->postRequest(H2hUrlConstants::SBP_INVOICE_CREATE, $request);
-
-        if (!empty($response['error']) || $response['status'] !== 200) {
-            throw new H2hException(is_array($response['error']) ? json_encode($response['error'], JSON_THROW_ON_ERROR) : $response['error'], $response['status']);
-        }
-
-        return $response;
-    }
-
-    /**
-     * @param array $data
-     *
-     * @return array
      * @throws BaseException
      * @throws CheckWalletException
      * @throws JsonException
@@ -325,5 +287,60 @@ class Client implements ClientContract
         }
 
         return $response;
+    }
+
+    public function getRecurrentProducts(array $data): array
+    {
+        return $this->recurrentRequest(RecurrentUrlConstants::PRODUCT_LIST, $data);
+    }
+
+    public function createRecurrentConsumer(array $data): array
+    {
+        return $this->recurrentRequest(RecurrentUrlConstants::CONSUMER_CREATE, $data);
+    }
+
+    public function createSubscription(array $data): array
+    {
+        return $this->recurrentRequest(RecurrentUrlConstants::SUBSCRIPTION_SUBSCRIBE, $data);
+    }
+
+    public function getSubscriptionStatus(array $data): array
+    {
+        $this->ensureSubscriptionIdentifier($data);
+
+        return $this->recurrentRequest(RecurrentUrlConstants::SUBSCRIPTION_STATUS, $data);
+    }
+
+    public function offsetSubscriptionNextPayTime(array $data): array
+    {
+        $this->ensureSubscriptionIdentifier($data);
+
+        return $this->recurrentRequest(RecurrentUrlConstants::SUBSCRIPTION_OFFSET_NEXT_PAY_TIME, $data);
+    }
+
+    public function unsubscribe(array $data): array
+    {
+        $this->ensureSubscriptionIdentifier($data);
+
+        return $this->recurrentRequest(RecurrentUrlConstants::SUBSCRIPTION_UNSUBSCRIBE, $data);
+    }
+
+    private function recurrentRequest(string $url, array $data): array
+    {
+        $request = json_encode($data, JSON_THROW_ON_ERROR);
+        $response = $this->httpClient->postRequest($url, $request);
+
+        if (!empty($response['error']) || $response['status'] !== 200) {
+            throw new RecurrentException(is_array($response['error']) ? json_encode($response['error'], JSON_THROW_ON_ERROR) : $response['error'], $response['status']);
+        }
+
+        return $response;
+    }
+
+    private function ensureSubscriptionIdentifier(array $data): void
+    {
+        if (empty($data['subscriptionId']) && empty($data['orderId'])) {
+            throw new RecurrentException('subscriptionId or orderId required', 422);
+        }
     }
 }

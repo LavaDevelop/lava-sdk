@@ -10,6 +10,7 @@ use Lava\Api\Exceptions\Payoff\CheckWalletException;
 use Lava\Api\Exceptions\Payoff\PayoffException;
 use Lava\Api\Exceptions\Profile\ProfileException;
 use Lava\Api\Exceptions\Refund\RefundException;
+use Lava\Api\Exceptions\Recurrent\RecurrentException;
 use Lava\Api\Exceptions\Shop\ShopException;
 
 class ClientErrorResponseMock implements ClientContract
@@ -166,48 +167,6 @@ class ClientErrorResponseMock implements ClientContract
     /**
      * @param array $data
      * @return array
-     * @throws PayoffException
-     */
-    public function createH2hInvoice(array $data): array
-    {
-        $response = [
-            'data' => null,
-            'error' => 'Payment method was not found for this user',
-            'status' => 405,
-            'status_check' => false
-        ];
-
-        if (!empty($response['error']) || $response['status'] !== 200) {
-            throw new PayoffException($response['error'], $response['status']);
-        }
-
-        return $response;
-    }
-
-    /**
-     * @param array $data
-     * @return array
-     * @throws PayoffException
-     */
-    public function createH2hSbp(array $data): array
-    {
-        $response = [
-            'data' => null,
-            'error' => 'Payment method was not found for this user',
-            'status' => 405,
-            'status_check' => false
-        ];
-
-        if (!empty($response['error']) || $response['status'] !== 200) {
-            throw new PayoffException($response['error'], $response['status']);
-        }
-
-        return $response;
-    }
-
-    /**
-     * @param array $data
-     * @return array
      * @throws CheckWalletException
      */
     public function checkWallet(array $data): array
@@ -303,5 +262,40 @@ class ClientErrorResponseMock implements ClientContract
         }
 
         return $response;
+    }
+
+    public function getRecurrentProducts(array $data): array
+    {
+        return $this->recurrentError();
+    }
+
+    public function createRecurrentConsumer(array $data): array
+    {
+        return $this->recurrentError();
+    }
+
+    public function createSubscription(array $data): array
+    {
+        return $this->recurrentError();
+    }
+
+    public function getSubscriptionStatus(array $data): array
+    {
+        return $this->recurrentError();
+    }
+
+    public function offsetSubscriptionNextPayTime(array $data): array
+    {
+        return $this->recurrentError();
+    }
+
+    public function unsubscribe(array $data): array
+    {
+        return $this->recurrentError();
+    }
+
+    private function recurrentError(): array
+    {
+        throw new RecurrentException('Subscription not found', 404);
     }
 }
